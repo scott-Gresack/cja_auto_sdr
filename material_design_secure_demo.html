@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Design 3 + Security-First Backend Patterns</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        :root {
+            --md-sys-color-primary: #6750a4;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #eaddff;
+            --md-sys-color-on-primary-container: #21005d;
+            
+            --md-sys-color-secondary: #625b71;
+            --md-sys-color-on-secondary: #ffffff;
+            --md-sys-color-secondary-container: #e8def8;
+            --md-sys-color-on-secondary-container: #1d192b;
+            
+            --md-sys-color-tertiary: #7d5260;
+            --md-sys-color-on-tertiary: #ffffff;
+            --md-sys-color-tertiary-container: #ffd8e4;
+            --md-sys-color-on-tertiary-container: #31111d;
+            
+            --md-sys-color-error: #b3261e;
+            --md-sys-color-on-error: #ffffff;
+            --md-sys-color-error-container: #f9dedc;
+            --md-sys-color-on-error-container: #410e0b;
+            
+            --md-sys-color-background: #fffbfe;
+            --md-sys-color-on-background: #1c1b1f;
+            --md-sys-color-surface: #fffbfe;
+            --md-sys-color-on-surface: #1c1b1f;
+            --md-sys-color-outline: #79747e;
+            
+            --md-sys-shape-corner-xs: 4px;
+            --md-sys-shape-corner-sm: 8px;
+            --md-sys-shape-corner-md: 12px;
+            --md-sys-shape-corner-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--md-sys-color-primary);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--md-sys-color-on-surface);
+            opacity: 0.7;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--md-sys-color-outline);
+            margin-bottom: 32px;
+        }
+
+        .tab-button {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button:hover {
+            color: var(--md-sys-color-primary);
+        }
+
+        .tab-button.active {
+            color: var(--md-sys-color-primary);
+            border-bottom-color: var(--md-sys-color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: var(--md-sys-shape-corner-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--md-sys-color-primary);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            border-radius: var(--md-sys-shape-corner-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #5d46937;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .button.secondary {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
+        .button.secondary:hover {
+            background-color: #d6cfe0;
+        }
+
+        .code-block {
+            background-color: #f5f5f5;
+            border-radius: var(--md-sys-shape-corner-sm);
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            border-left: 4px solid var(--md-sys-color-primary);
+            margin: 12px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--md-sys-color-on-background);
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--md-sys-color-secondary);
+            font-weight: bold;
+        }
+
+        .security-badge {
+            display: inline-block;
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            padding: 4px 12px;
+            border-radius: var(--md-sys-shape-corner-sm);
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .pattern-box {
+            background-color: var(--md-sys-color-primary-container);
+            border-radius: var(--md-sys-shape-corner-md);
+            padding: 20px;
+            margin: 16px 0;
+            border-left: 4px solid var(--md-sys-color-primary);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            font-weight: 500;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px 0;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 48px;
+            color: var(--md-sys-color-on-surface);
+            opacity: 0.7;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Material Design 3 + 🔐 Security-First Backend</h1>
+            <p class="subtitle">Modern UI Patterns with Enterprise Security Principles</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('material')">Material Design 3</button>
+            <button class="tab-button" onclick="switchTab('security')">Security Patterns</button>
+            <button class="tab-button" onclick="switchTab('backend')">Backend Best Practices</button>
+            <button class="tab-button" onclick="switchTab('integration')">Integration Guide</button>
+        </div>
+
+        <!-- Material Design 3 Tab -->
+        <div id="material" class="tab-content active">
+            <h2 style="font-size: 24px; margin-bottom: 24px; color: var(--md-sys-color-primary);">📐 Material Design 3 Principles</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Core Principles</h3>
+                    <ul class="feature-list">
+                        <li>Material You - Personalization at its core</li>
+                        <li>Expressive color system with dynamic theming</li>
+                        <li>Intuitive navigation and interaction patterns</li>
+                        <li>Accessible components for all users</li>
+                        <li>Responsive across all device sizes</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎨 Color System</h3>
+                    <p>Material Design 3 uses a dynamic color system based on user's wallpaper:</p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0;">
+                        <div style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); padding: 12px; border-radius: 8px; text-align: center; font-size: 12px;">Primary</div>
+                        <div style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary); padding: 12px; border-radius: 8px; text-align: center; font-size: 12px;">Secondary</div>
+                        <div style="background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary); padding: 12px; border-radius: 8px; text-align: center; font-size: 12px;">Tertiary</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📐 Typography Scale</h3>
+                    <div style="font-size: 28px; font-weight: 700; margin: 8px 0;">Display Large</div>
+                    <div style="font-size: 22px; font-weight: 700; margin: 8px 0;">Headline Large</div>
+                    <div style="font-size: 16px; font-weight: 500; margin: 8px 0;">Body Large</div>
+                    <p style="font-size: 12px; margin: 8px 0;">Label Small</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>✨ Interactive Components</h3>
+                <p>Click below to see Material Design 3 in action:</p>
+                <div style="margin: 16px 0; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="button">Primary Button</button>
+                    <button class="button secondary">Secondary Button</button>
+                    <button class="button" style="background-color: var(--md-sys-color-tertiary);">Tertiary Button</button>
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: var(--md-sys-color-primary); margin-bottom: 12px;">🎯 Material Design 3 Benefits</h3>
+                <ul class="feature-list" style="color: var(--md-sys-color-on-primary-container);">
+                    <li>Reduced cognitive load with consistent patterns</li>
+                    <li>Accessibility built-in (WCAG 2.1 AA compliance)</li>
+                    <li>Touch-friendly targets (48dp minimum)</li>
+                    <li>Clear visual hierarchy and feedback</li>
+                    <li>Works across web, iOS, and Android</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Security Patterns Tab -->
+        <div id="security" class="tab-content">
+            <h2 style="font-size: 24px; margin-bottom: 24px; color: var(--md-sys-color-error);">🔐 Security-First Patterns</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔑 Authentication & Authorization</h3>
+                    <ul class="feature-list">
+                        <li>OAuth 2.0 + PKCE flow</li>
+                        <li>JWT with short-lived tokens</li>
+                        <li>Role-based access control (RBAC)</li>
+                        <li>Session validation on every request</li>
+                        <li>Automatic token refresh</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🛡️ Data Protection</h3>
+                    <ul class="feature-list">
+                        <li>HTTPS only (TLS 1.3+)</li>
+                        <li>Encrypt sensitive data at rest</li>
+                        <li>Never log personal information</li>
+                        <li>Use strong hashing (bcrypt/argon2)</li>
+                        <li>Implement rate limiting</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 API Security</h3>
+                    <ul class="feature-list">
+                        <li>Validate all inputs server-side</li>
+                        <li>Implement CORS correctly</li>
+                        <li>Use Content Security Policy (CSP)</li>
+                        <li>Implement request signing</li>
+                        <li>API versioning for safe updates</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>❌ Security Anti-Patterns to Avoid</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Anti-Pattern</th>
+                        <th>Risk</th>
+                        <th>Solution</th>
+                    </tr>
+                    <tr>
+                        <td>Storing passwords in plaintext</td>
+                        <td>Critical - Data breach</td>
+                        <td>Use bcrypt/argon2 hashing</td>
+                    </tr>
+                    <tr>
+                        <td>Exposing sensitive paths in frontend</td>
+                        <td>High - Information disclosure</td>
+                        <td>Never hardcode user/system paths</td>
+                    </tr>
+                    <tr>
+                        <td>Logging credentials/API keys</td>
+                        <td>Critical - Credential theft</td>
+                        <td>Sanitize logs, use env variables</td>
+                    </tr>
+                    <tr>
+                        <td>Trusting client-side validation alone</td>
+                        <td>High - Injection attacks</td>
+                        <td>Always validate server-side</td>
+                    </tr>
+                    <tr>
+                        <td>Hardcoding secrets in code</td>
+                        <td>Critical - Exposed in git history</td>
+                        <td>Use environment variables only</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Backend Best Practices Tab -->
+        <div id="backend" class="tab-content">
+            <h2 style="font-size: 24px; margin-bottom: 24px; color: var(--md-sys-color-secondary);">⚙️ Backend Best Practices</h2>
+
+            <div class="card">
+                <h3>🏗️ Secure Backend Architecture</h3>
+                <div class="code-block">
+# Backend Security Checklist
+✓ Never expose internal paths in responses
+✓ Implement request signing/HMAC validation
+✓ Use API keys with rotation policies
+✓ Implement comprehensive audit logging
+✓ Use secrets management (AWS Secrets Manager, HashiCorp Vault)
+✓ Database encryption & connection pooling
+✓ Input validation & sanitization
+✓ Output encoding to prevent XSS
+✓ Implement CORS with specific allowed origins
+✓ Rate limiting and DDoS protection
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔒 Environment Variable Management</h3>
+                    <div class="code-block">
+# ❌ WRONG - Never do this
+API_KEY=sk-1234567890
+DATABASE_URL=postgres://user:pass@localhost
+
+# ✅ CORRECT
+# Use .env.local (excluded from git)
+# Use secrets manager for production
+# Rotate keys regularly
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Audit Logging</h3>
+                    <div class="code-block">
+# Log these:
+- User authentication events
+- API access with method & endpoint
+- Data modifications
+- Failed security checks
+- Admin actions
+
+# Never log these:
+- Passwords or API keys
+- Full credit cards
+- Social Security Numbers
+- PII or sensitive data
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: var(--md-sys-color-primary); margin-bottom: 12px;">🚀 Production Deployment Checklist</h3>
+                <ul class="feature-list" style="color: var(--md-sys-color-on-primary-container);">
+                    <li>All secrets in secure vault (not in code)</li>
+                    <li>HTTPS/TLS enabled on all endpoints</li>
+                    <li>Database encryption at rest & in transit</li>
+                    <li>Comprehensive monitoring and alerting</li>
+                    <li>Regular security audits and penetration testing</li>
+                    <li>Incident response plan documented</li>
+                    <li>Data backup and recovery tested</li>
+                    <li>Rate limiting and DDoS protection active</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Integration Guide Tab -->
+        <div id="integration" class="tab-content">
+            <h2 style="font-size: 24px; margin-bottom: 24px; color: var(--md-sys-color-tertiary);">🔗 Material Design 3 + Secure Backend Integration</h2>
+
+            <div class="card">
+                <h3>📋 Complete Example: Secure Login Flow</h3>
+                <div class="code-block">
+// Frontend: Material Design 3 Login Form
+1. User enters credentials
+2. Frontend validates format only (no actual auth)
+3. Send HTTPS POST to /api/auth/login
+4. Never store credentials in localStorage
+5. Store JWT in secure, httpOnly cookie
+6. Add CSRF token to subsequent requests
+
+// Backend: Secure Authentication
+1. Validate credentials against secure hash
+2. Generate JWT with 15-min expiry
+3. Return refresh token (7-day) in httpOnly cookie
+4. Log authentication event (without credentials)
+5. Implement rate limiting on auth endpoint
+6. Return only necessary user data
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🎨 Frontend (Material Design 3)</h3>
+                    <ul class="feature-list">
+                        <li>Beautiful, accessible UI components</li>
+                        <li>Input validation feedback</li>
+                        <li>Loading and error states</li>
+                        <li>NEVER store sensitive data</li>
+                        <li>Use secure cookie handling</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>⚙️ Backend (Security-First)</h3>
+                    <ul class="feature-list">
+                        <li>All authentication logic</li>
+                        <li>All authorization checks</li>
+                        <li>Data validation & sanitization</li>
+                        <li>Encrypted data storage</li>
+                        <li>Comprehensive audit logs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: var(--md-sys-color-primary); margin-bottom: 12px;">🔄 Secure Request Flow</h3>
+                <div style="color: var(--md-sys-color-on-primary-container); font-family: monospace; font-size: 12px;">
+Browser (Material UI)
+  ↓ HTTPS POST /api/user/profile
+Backend (Secure)
+  ↓ Validate JWT token
+  ✓ Check user permissions
+  ✓ Sanitize request data
+  ✓ Query encrypted database
+  ✓ Return filtered response
+  ↓ HTTPS 200 OK
+Browser (Update Material UI safely)
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Implementation Timeline</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Phase</th>
+                        <th>Focus</th>
+                        <th>Deliverable</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 1</strong></td>
+                        <td>Material Design 3 setup</td>
+                        <td>Component library, design tokens</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 2</strong></td>
+                        <td>Backend framework + security</td>
+                        <td>Auth endpoints, database setup</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 3</strong></td>
+                        <td>Frontend-Backend integration</td>
+                        <td>Login flow, API calls secured</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 4</strong></td>
+                        <td>Testing & deployment</td>
+                        <td>Security audit, production ready</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            <p>Material Design 3 + Security-First Backend Patterns Guide</p>
+            <p>For more information, visit:</p>
+            <p>
+                <a href="https://m3.material.io" style="color: var(--md-sys-color-primary); text-decoration: none;">Material Design 3 Documentation</a> • 
+                <a href="https://owasp.org/www-project-top-ten/" style="color: var(--md-sys-color-error); text-decoration: none;">OWASP Top 10</a> • 
+                <a href="https://cheatsheetseries.owasp.org/" style="color: var(--md-sys-color-secondary); text-decoration: none;">OWASP Cheat Sheets</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Highlight active button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

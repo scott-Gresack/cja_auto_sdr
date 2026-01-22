@@ -486,7 +486,7 @@
                 <h4>🚀 Getting Started</h4>
                 <p>Install Node.js, then run:</p>
                 <div class="code-block">
-cd /Users/gresack/ai_mar/aephealthviewer-open
+cd aephealthviewer-open
 npm install
 npm run dev
 # Access at http://localhost:3000
@@ -595,7 +595,7 @@ npm run dev
                 <h4>🚀 Getting Started</h4>
                 <p>Install Python, then run:</p>
                 <div class="code-block">
-cd /Users/gresack/ai_mar/cja_auto_sdr_original
+cd cja_auto_sdr_original
 python -m pip install -r requirements.txt
 python cja_sdr_generator.py --help
                 </div>
@@ -743,16 +743,12 @@ CJA SDR Generator: python cja_sdr_generator.py
 
             <div class="card">
                 <h3>🔐 Security & Configuration</h3>
-                <p>Both projects use environment variables for API credentials:</p>
+                <p>Both projects use environment variables for API credentials. Never commit secrets to version control:</p>
                 <div class="code-block">
-# .env files for AEP credentials
-AEP_ORG_ID=your-org-id
-AEP_API_KEY=your-api-key
-AEP_ACCESS_TOKEN=your-token
-
-# CJA credentials
-CJA_COMPANY_ID=your-company-id
-CJA_API_TOKEN=your-api-token
+# Use .env.local files (not tracked in git)
+# Create separate configuration for each environment
+# Rotate credentials regularly
+# Use service accounts with minimal permissions
                 </div>
             </div>
 
@@ -764,7 +760,7 @@ CJA_API_TOKEN=your-api-token
 
         <footer>
             <p>Adobe Tech Stack Dashboard | Integrated Solution for AEP & CJA Automation</p>
-            <p style="margin-top: 10px; color: #555;">Local projects: /Users/gresack/ai_mar/aephealthviewer-open | /Users/gresack/ai_mar/cja_auto_sdr_original</p>
+            <p style="margin-top: 10px; color: #555;">For deployment documentation, refer to project README files</p>
         </footer>
     </div>
 
