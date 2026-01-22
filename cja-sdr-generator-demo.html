@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CJA SDR Generator - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --primary-dark: #0f0f1e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-light: #ff6b7a;
+            --success: #00d4aa;
+            --warning: #ff9f43;
+            --danger: #ff5757;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1a6;
+            --border: #2a2a3e;
+            --bg-highlight: #1f1f35;
+            --code-bg: #0d0d1a;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== DEMO SECTION ===== */
+        .demo-container {
+            background: var(--bg-highlight);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.8s ease 0.2s backwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes progressBar {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        /* ===== PROCESSING STAGES ===== */
+        .stages {
+            background: linear-gradient(135deg, rgba(22,33,62,0.5) 0%, rgba(26,26,46,0.5) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stage {
+            margin-bottom: 2rem;
+            animation: slideIn 0.4s ease backwards;
+        }
+
+        .stage:last-child {
+            margin-bottom: 0;
+        }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stage-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stage.complete .stage-number {
+            background: linear-gradient(135deg, var(--success), #00ffff);
+        }
+
+        .stage-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stage-status {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stage.complete .stage-status {
+            color: var(--success);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(233, 69, 96, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 3px;
+            width: 0;
+        }
+
+        .stage.complete .progress-fill {
+            background: linear-gradient(90deg, var(--success), #00ffff);
+        }
+
+        /* ===== OUTPUT PREVIEW ===== */
+        .output-section {
+            background: linear-gradient(135deg, rgba(22,33,62,0.5) 0%, rgba(26,26,46,0.5) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .output-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .output-formats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(0, 212, 170, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .format-card.generated {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.15) 0%, rgba(22,33,62,0.5) 100%);
+        }
+
+        .format-icon {
+            font-size: 28px;
+            margin-bottom: 0.5rem;
+        }
+
+        .format-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* ===== SAMPLE OUTPUT ===== */
+        .sample-output {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            color: var(--text-primary);
+        }
+
+        .output-line {
+            padding: 0.25rem 0;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .output-key {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .output-value {
+            color: var(--success);
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(22,33,62,0.8) 0%, rgba(26,26,46,0.8) 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== CONTROLS ===== */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(233, 69, 96, 0.15);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(233, 69, 96, 0.25);
+        }
+
+        /* ===== INFO BOX ===== */
+        .info-box {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(233, 69, 96, 0.05) 100%);
+            border-left: 4px solid var(--success);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-title {
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .demo-container {
+                padding: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>📊 CJA SDR Generator</h1>
+            <p class="subtitle">Automated Summary Data Report Generation & Distribution</p>
+        </header>
+
+        <!-- Main Demo -->
+        <div class="demo-container">
+            <h2 class="demo-title">Report Generation Pipeline</h2>
+
+            <div class="info-box">
+                <div class="info-title">📈 What You're Watching</div>
+                <div class="info-text">
+                    This demo shows the CJA SDR Generator processing data and generating comprehensive Summary Data Reports. Watch as it validates data, creates multiple output formats, and prepares for distribution.
+                </div>
+            </div>
+
+            <!-- Processing Stages -->
+            <div class="stages">
+                <h3 style="color: var(--accent); margin-bottom: 1.5rem;">Processing Pipeline</h3>
+                
+                <div class="stage" id="stage-1">
+                    <div class="stage-header">
+                        <div class="stage-number">1</div>
+                        <div class="stage-title">Data Validation</div>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="stage" id="stage-2">
+                    <div class="stage-header">
+                        <div class="stage-number">2</div>
+                        <div class="stage-title">Quality Checks</div>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="stage" id="stage-3">
+                    <div class="stage-header">
+                        <div class="stage-number">3</div>
+                        <div class="stage-title">Report Generation</div>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="stage" id="stage-4">
+                    <div class="stage-header">
+                        <div class="stage-number">4</div>
+                        <div class="stage-title">Format Conversion</div>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="stage" id="stage-5">
+                    <div class="stage-header">
+                        <div class="stage-number">5</div>
+                        <div class="stage-title">Distribution Prep</div>
+                        <div class="stage-status">Pending</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-rows">0</div>
+                    <div class="stat-label">Data Rows</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-columns">0</div>
+                    <div class="stat-label">Columns</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-formats">0</div>
+                    <div class="stat-label">Output Formats</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-time">0s</div>
+                    <div class="stat-label">Processing Time</div>
+                </div>
+            </div>
+
+            <!-- Output Formats -->
+            <div class="output-section">
+                <h3 class="output-title">Output Formats Generated</h3>
+                <div class="output-formats">
+                    <div class="format-card" id="format-excel">
+                        <div class="format-icon">📊</div>
+                        <div class="format-label">Excel (.xlsx)</div>
+                    </div>
+                    <div class="format-card" id="format-csv">
+                        <div class="format-icon">📋</div>
+                        <div class="format-label">CSV</div>
+                    </div>
+                    <div class="format-card" id="format-json">
+                        <div class="format-icon">{ }</div>
+                        <div class="format-label">JSON</div>
+                    </div>
+                    <div class="format-card" id="format-html">
+                        <div class="format-icon">🌐</div>
+                        <div class="format-label">HTML</div>
+                    </div>
+                    <div class="format-card" id="format-markdown">
+                        <div class="format-icon">📝</div>
+                        <div class="format-label">Markdown</div>
+                    </div>
+                    <div class="format-card" id="format-pdf">
+                        <div class="format-icon">📄</div>
+                        <div class="format-label">PDF</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Output Preview -->
+            <div class="output-section">
+                <h3 class="output-title">Sample Report Data</h3>
+                <div class="sample-output" id="sample-output">
+                    <div class="output-line">
+                        <span class="output-key">Report Type:</span>
+                        <span class="output-value">Summary Data Report (SDR)</span>
+                    </div>
+                    <div class="output-line">
+                        <span class="output-key">Date Generated:</span>
+                        <span class="output-value">Awaiting processing...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button id="start-btn" onclick="startDemo()">▶ Generate Report</button>
+                <button id="reset-btn" class="btn-secondary" onclick="resetDemo()">⟲ Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let demoRunning = false;
+        let startTime = 0;
+
+        function updateStage(stageNum, status, isComplete = false) {
+            const stage = document.getElementById(`stage-${stageNum}`);
+            if (stage) {
+                const statusEl = stage.querySelector('.stage-status');
+                if (statusEl) {
+                    statusEl.textContent = status;
+                }
+                if (isComplete) {
+                    stage.classList.add('complete');
+                    const progressFill = stage.querySelector('.progress-fill');
+                    if (progressFill) {
+                        progressFill.style.width = '100%';
+                    }
+                }
+            }
+        }
+
+        function updateStat(statId, value) {
+            const stat = document.getElementById(statId);
+            if (stat) {
+                stat.textContent = value;
+            }
+        }
+
+        function updateTime() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            updateStat('stat-time', `${elapsed}s`);
+        }
+
+        function markFormatGenerated(formatId) {
+            const card = document.getElementById(formatId);
+            if (card) {
+                card.classList.add('generated');
+            }
+        }
+
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function startDemo() {
+            if (demoRunning) return;
+            demoRunning = true;
+            startTime = Date.now();
+
+            document.getElementById('start-btn').disabled = true;
+
+            // Clear output
+            const output = document.getElementById('sample-output');
+            output.innerHTML = '';
+
+            // Reset formats
+            document.querySelectorAll('.format-card').forEach(card => card.classList.remove('generated'));
+
+            // Reset stages
+            document.querySelectorAll('.stage').forEach(stage => stage.classList.remove('complete'));
+            document.querySelectorAll('.progress-fill').forEach(fill => fill.style.width = '0');
+
+            // Phase 1: Data Validation
+            updateStage(1, 'Running');
+            updateStat('stat-rows', '0');
+            updateStat('stat-columns', '0');
+
+            const lines = [
+                '<div class="output-line"><span class="output-key">Status:</span><span class="output-value">Validating input data...</span></div>'
+            ];
+            output.innerHTML = lines.join('');
+
+            for (let i = 0; i < 100; i += 20) {
+                document.querySelector('#stage-1 .progress-fill').style.width = i + '%';
+                await sleep(200);
+            }
+
+            updateStage(1, 'Complete', true);
+            lines.push('<div class="output-line"><span class="output-key">✅ Data validation:</span><span class="output-value">2,847,562 rows validated</span></div>');
+            output.innerHTML = lines.join('');
+            updateStat('stat-rows', '2,847,562');
+            await sleep(600);
+
+            // Phase 2: Quality Checks
+            updateStage(2, 'Running');
+            lines.push('<div class="output-line"><span class="output-key">Status:</span><span class="output-value">Performing quality checks...</span></div>');
+            output.innerHTML = lines.join('');
+
+            for (let i = 0; i < 100; i += 25) {
+                document.querySelector('#stage-2 .progress-fill').style.width = i + '%';
+                await sleep(150);
+            }
+
+            updateStage(2, 'Complete', true);
+            lines.push('<div class="output-line"><span class="output-key">✅ Quality checks:</span><span class="output-value">99.8% data integrity</span></div>');
+            output.innerHTML = lines.join('');
+            updateStat('stat-columns', '156');
+            await sleep(600);
+
+            // Phase 3: Report Generation
+            updateStage(3, 'Running');
+            lines.push('<div class="output-line"><span class="output-key">Status:</span><span class="output-value">Generating report...</span></div>');
+            output.innerHTML = lines.join('');
+
+            for (let i = 0; i < 100; i += 25) {
+                document.querySelector('#stage-3 .progress-fill').style.width = i + '%';
+                await sleep(200);
+            }
+
+            updateStage(3, 'Complete', true);
+            lines.push('<div class="output-line"><span class="output-key">✅ Report generated:</span><span class="output-value">Main SDR ready</span></div>');
+            output.innerHTML = lines.join('');
+            await sleep(600);
+
+            // Phase 4: Format Conversion
+            updateStage(4, 'Running');
+            lines.push('<div class="output-line"><span class="output-key">Status:</span><span class="output-value">Converting formats...</span></div>');
+            output.innerHTML = lines.join('');
+
+            const formats = ['format-excel', 'format-csv', 'format-json', 'format-html', 'format-markdown', 'format-pdf'];
+            for (let i = 0; i < formats.length; i++) {
+                await sleep(300);
+                markFormatGenerated(formats[i]);
+                const progress = ((i + 1) / formats.length) * 100;
+                document.querySelector('#stage-4 .progress-fill').style.width = progress + '%';
+            }
+
+            updateStage(4, 'Complete', true);
+            lines.push('<div class="output-line"><span class="output-key">✅ Formats generated:</span><span class="output-value">6 output types</span></div>');
+            output.innerHTML = lines.join('');
+            updateStat('stat-formats', '6');
+            await sleep(600);
+
+            // Phase 5: Distribution Prep
+            updateStage(5, 'Running');
+            lines.push('<div class="output-line"><span class="output-key">Status:</span><span class="output-value">Preparing distribution...</span></div>');
+            output.innerHTML = lines.join('');
+
+            for (let i = 0; i < 100; i += 25) {
+                document.querySelector('#stage-5 .progress-fill').style.width = i + '%';
+                await sleep(200);
+            }
+
+            updateStage(5, 'Complete', true);
+            lines.push('<div class="output-line"><span class="output-key">✅ Distribution ready:</span><span class="output-value">48.3 MB total</span></div>');
+            lines.push('<div class="output-line"><span class="output-key">📤 Ready to send via:</span><span class="output-value">Email, FTP, S3, Webhook</span></div>');
+            lines.push('<div class="output-line"><span class="output-key">⏱️ Total time:</span><span class="output-value" id="final-time">-</span></div>');
+            output.innerHTML = lines.join('');
+
+            const totalTime = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById('final-time').textContent = totalTime + 's';
+
+            document.getElementById('start-btn').disabled = false;
+            demoRunning = false;
+
+            // Stop time update
+            if (window.timeInterval) clearInterval(window.timeInterval);
+        }
+
+        function resetDemo() {
+            demoRunning = false;
+            document.getElementById('start-btn').disabled = false;
+
+            // Reset stages
+            document.querySelectorAll('.stage').forEach(stage => stage.classList.remove('complete'));
+            document.querySelectorAll('.progress-fill').forEach(fill => fill.style.width = '0');
+            document.querySelectorAll('.stage-status').forEach(el => el.textContent = 'Pending');
+
+            // Reset formats
+            document.querySelectorAll('.format-card').forEach(card => card.classList.remove('generated'));
+
+            // Reset stats
+            updateStat('stat-rows', '0');
+            updateStat('stat-columns', '0');
+            updateStat('stat-formats', '0');
+            updateStat('stat-time', '0s');
+
+            // Reset output
+            const output = document.getElementById('sample-output');
+            output.innerHTML = '<div class="output-line"><span class="output-key">Report Type:</span><span class="output-value">Summary Data Report (SDR)</span></div><div class="output-line"><span class="output-key">Status:</span><span class="output-value">Ready</span></div>';
+
+            if (window.timeInterval) clearInterval(window.timeInterval);
+        }
+
+        // Update time every second while running
+        window.addEventListener('beforeunload', () => {
+            if (window.timeInterval) clearInterval(window.timeInterval);
+        });
+    </script>
+</body>
+</html>
