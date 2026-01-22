@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Commerce & UCP | Blue Acorn iCi Insights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Adobe Clean', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #2c2c2c;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* TOP HEADER BAR */
+        .header-bar {
+            background: linear-gradient(135deg, #002D56 0%, #0066cc 100%);
+            padding: 18px 0;
+            box-shadow: 0 4px 12px rgba(0, 45, 86, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .company-logo a {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .company-logo a:hover {
+            opacity: 0.9;
+        }
+
+        .logo-text {
+            color: #ffffff;
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .infosys-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .infosys-badge:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ENHANCED NAVIGATION BAR */
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            margin: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c2c2c;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: #0066cc;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #0066cc;
+        }
+
+        .nav-links a.active {
+            color: #0066cc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* UCP HERO SECTION */
+        .ucp-hero {
+            background: linear-gradient(135deg, #002D56 0%, #0066cc 50%, #002D56 100%);
+            color: white;
+            padding: 100px 40px;
+            margin: -60px -40px 60px -40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ucp-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .ucp-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .ucp-hero h2 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .ucp-hero p {
+            font-size: 1.3em;
+            font-weight: 300;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .ucp-hero .highlight {
+            color: #FFC627;
+            font-weight: 700;
+        }
+
+        .title-section {
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .main-title {
+            font-size: 2.8em;
+            font-weight: 300;
+            color: #002D56;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .main-title span {
+            color: #0066cc;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #6e6e6e;
+            font-weight: 300;
+            max-width: 900px;
+            line-height: 1.6;
+        }
+
+        .technical-label {
+            display: inline-block;
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
+        }
+
+        .section {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.8s ease-out backwards;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.1);
+        }
+
+        .section:nth-child(2) { animation-delay: 0.3s; }
+        .section:nth-child(3) { animation-delay: 0.5s; }
+        .section:nth-child(4) { animation-delay: 0.7s; }
+
+        .section-title {
+            font-size: 2em;
+            font-weight: 600;
+            color: #002D56;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #0066cc;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: #0066cc;
+            color: white;
+            border-radius: 50%;
+            font-size: 1.3em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-subtitle {
+            font-size: 1.1em;
+            color: #6e6e6e;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .layer-card {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            animation: slideIn 0.6s ease-out backwards;
+            cursor: pointer;
+        }
+
+        .layer-card:nth-child(1) { animation-delay: 0.6s; }
+        .layer-card:nth-child(2) { animation-delay: 0.8s; }
+        .layer-card:nth-child(3) { animation-delay: 1s; }
+        .layer-card:nth-child(4) { animation-delay: 1.2s; }
+
+        .layer-card:hover {
+            border-color: #0066cc;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.2);
+        }
+
+        .layer-label {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            color: #0066cc;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .layer-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #002D56;
+            margin-bottom: 12px;
+        }
+
+        .layer-desc {
+            font-size: 0.9em;
+            color: #6e6e6e;
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #0066cc;
+            font-weight: 300;
+            animation: pulse-arrow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-arrow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .layer-card:last-child .flow-arrow {
+            display: none;
+        }
+
+        .technical-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 0.95em;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .technical-table thead {
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .technical-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .technical-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .technical-table tr {
+            transition: background 0.2s ease;
+            animation: fadeIn 0.4s ease-out backwards;
+        }
+
+        .technical-table tbody tr:hover {
+            background: #f0f7ff;
+        }
+
+        .technical-table code {
+            background: #f0f0f0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+            border: 1px solid #e0e0e0;
+        }
+
+        .code-container {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out 1.7s backwards;
+            border: 1px solid #444;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .code-title {
+            color: #0066cc;
+            font-size: 0.9em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-lang {
+            color: #888;
+            font-size: 0.85em;
+            background: #333;
+            padding: 4px 12px;
+            border-radius: 4px;
+        }
+
+        .code-content {
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.7;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+
+        .code-content .key {
+            color: #79c0ff;
+        }
+
+        .code-content .string {
+            color: #a5d6ff;
+        }
+
+        .code-content .number {
+            color: #79c0ff;
+        }
+
+        .implementation-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #0066cc;
+            border-radius: 10px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            animation: slideUp 0.6s ease-out backwards;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.15);
+            transform: translateX(8px);
+            border-left-color: #002D56;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #002D56;
+            margin-bottom: 15px;
+        }
+
+        .step-desc {
+            color: #6e6e6e;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .key-benefits {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #f8fbff 100%);
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%);
+            border-color: #0066cc;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.1);
+        }
+
+        .benefit-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .benefit-text {
+            color: #2c2c2c;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .demo-container {
+            margin-top: 40px;
+        }
+
+        .demo-panel {
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-panel:hover {
+            border-color: #0066cc;
+            box-shadow: 0 12px 32px rgba(0, 102, 204, 0.1);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .panel-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #002D56;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            color: #6e6e6e;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse-status 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        @keyframes pulse-status {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .chat-interface {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            min-height: 250px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: slideInMessage 0.5s ease-out;
+        }
+
+        @keyframes slideInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            flex-shrink: 0;
+            border: 2px solid #e0e0e0;
+        }
+
+        .user-message .message-avatar {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-color: #0066cc;
+        }
+
+        .agent-message .message-avatar {
+            background: linear-gradient(135deg, #f0f7ff, #c8e6f5);
+            border-color: #0066cc;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            background: #f5f5f5;
+            padding: 15px 18px;
+            border-radius: 12px;
+            color: #2c2c2c;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .user-message .message-text {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+        }
+
+        .agent-message .message-text {
+            background: #f0f7ff;
+        }
+
+        .product-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.1);
+            transform: translateX(4px);
+        }
+
+        .product-image {
+            font-size: 3.5em;
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 700;
+            color: #002D56;
+            margin-bottom: 6px;
+            font-size: 1.05em;
+        }
+
+        .product-price {
+            color: #0066cc;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.4);
+        }
+
+        .add-to-cart-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .data-flow-visualization {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .data-flow-visualization:hover {
+            border-color: #0066cc;
+            box-shadow: 0 8px 24px rgba(0, 102, 204, 0.1);
+        }
+
+        .event-log {
+            background: #2c2c2c;
+            border-radius: 10px;
+            margin-top: 30px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .log-header {
+            background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
+            color: #0066cc;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .log-entries {
+            padding: 18px;
+            max-height: 220px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            animation: fadeIn 0.3s ease-out;
+            border-left: 3px solid #444;
+        }
+
+        .log-info {
+            color: #a8dadc;
+            border-left-color: #a8dadc;
+        }
+
+        .log-success {
+            color: #4caf50;
+            border-left-color: #4caf50;
+        }
+
+        .log-time {
+            color: #888;
+            margin-right: 12px;
+            font-weight: 600;
+        }
+
+        .omnichannel-activation {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .channel-card {
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.5s ease-out;
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+
+        .channel-icon {
+            font-size: 3.2em;
+            margin-bottom: 18px;
+        }
+
+        .channel-name {
+            font-weight: 700;
+            color: #002D56;
+            margin-bottom: 12px;
+            font-size: 1.15em;
+        }
+
+        .channel-message {
+            color: #6e6e6e;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .demo-replay-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            color: #ffffff;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.3);
+        }
+
+        .demo-replay-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 102, 204, 0.4);
+        }
+
+        .demo-replay-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .demo-replay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* UCP CORE CONCEPTS SECTION */
+        .ucp-concepts {
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+            padding: 80px 40px;
+            margin: 60px -40px;
+            border-top: 3px solid #0066cc;
+            border-bottom: 3px solid #0066cc;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .concept-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #002D56, #0066cc);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .concept-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-10px);
+            box-shadow: 0 16px 40px rgba(0, 102, 204, 0.15);
+        }
+
+        .concept-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .concept-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .concept-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #002D56;
+            margin-bottom: 15px;
+        }
+
+        .concept-desc {
+            color: #6e6e6e;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        /* REAL-TIME PERSONALIZATION SECTION */
+        .personalization-section {
+            background: white;
+            padding: 80px 40px;
+            margin: 60px -40px;
+        }
+
+        .personalization-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .personalization-content h3 {
+            font-size: 2em;
+            color: #002D56;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .personalization-content p {
+            color: #6e6e6e;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        .personalization-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #f8fbff 100%);
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+            transition: all 0.3s ease;
+        }
+
+        .personalization-feature:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.1);
+        }
+
+        .feature-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #002D56, #0066cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .feature-content h4 {
+            font-weight: 700;
+            color: #002D56;
+            margin-bottom: 5px;
+        }
+
+        .feature-content p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .personalization-visual {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%);
+            border: 2px solid #0066cc;
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .personalization-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .visual-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .visual-content h4 {
+            color: #002D56;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .data-flow-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .step-icon {
+            width: 35px;
+            height: 35px;
+            background: #0066cc;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-label {
+            color: #6e6e6e;
+            font-size: 0.9em;
+        }
+
+        /* ECOSYSTEM SECTION */
+        .ecosystem-section {
+            background: linear-gradient(135deg, #002D56 0%, #0066cc 100%);
+            color: white;
+            padding: 80px 40px;
+            margin: 60px -40px;
+            border-radius: 0;
+        }
+
+        .ecosystem-section h2 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .ecosystem-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .ecosystem-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-8px);
+        }
+
+        .ecosystem-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .ecosystem-card h4 {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .ecosystem-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) {
+            .architecture-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flow-arrow {
+                right: 50%;
+                top: auto;
+                bottom: -15px;
+                transform: translateX(50%) rotate(90deg);
+            }
+
+            .layer-card:nth-child(2) .flow-arrow,
+            .layer-card:last-child .flow-arrow {
+                display: none;
+            }
+
+            .omnichannel-activation {
+                grid-template-columns: 1fr;
+            }
+
+            .key-benefits {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+            }
+
+            .logo-text {
+                font-size: 1.2em;
+            }
+
+            .infosys-badge {
+                font-size: 0.7em;
+                padding: 4px 10px;
+            }
+
+            .nav-content {
+                padding: 0 20px;
+                height: 50px;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                font-size: 0.85em;
+            }
+
+            .nav-bar {
+                top: 60px;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+
+            .main-title {
+                font-size: 1.8em;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .implementation-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .ucp-hero {
+                padding: 60px 20px;
+                margin: -40px -20px 40px -20px;
+            }
+
+            .ucp-hero h2 {
+                font-size: 2.2em;
+            }
+
+            .ucp-hero p {
+                font-size: 1.05em;
+            }
+
+            .ucp-concepts {
+                padding: 60px 20px;
+                margin: 40px -20px;
+            }
+
+            .concepts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .personalization-section {
+                padding: 60px 20px;
+                margin: 40px -20px;
+            }
+
+            .personalization-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .personalization-visual {
+                padding: 30px 20px;
+            }
+
+            .ecosystem-section {
+                padding: 60px 20px;
+                margin: 40px -20px;
+            }
+
+            .ecosystem-section h2 {
+                font-size: 1.8em;
+            }
+
+            .ecosystem-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP HEADER BAR -->
+    <div class="header-bar">
+        <div class="header-content">
+            <div class="company-logo">
+                <a href="new.html" style="text-decoration: none; display: flex; align-items: center; gap: 20px;">
+                    <div class="logo-text">🔵 Blue Acorn iCi</div>
+                    <div class="infosys-badge">An Infosys Company</div>
+                </a>
+            </div>
+            <a href="t.html" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">Technical Deep Dive →</a>
+        </div>
+    </div>
+
+    <!-- ENHANCED NAVIGATION BAR -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <ul class="nav-links">
+                <li><a href="#ucp-protocol" class="nav-link">UCP Protocol</a></li>
+                <li><a href="#architecture" class="nav-link active">AEP Integration</a></li>
+                <li><a href="#ucp-concepts" class="nav-link">UCP Concepts</a></li>
+                <li><a href="#personalization" class="nav-link">Real-Time Personalization</a></li>
+                <li><a href="#demo" class="nav-link">Live Demo</a></li>
+                <li><a href="#ecosystem" class="nav-link">Ecosystem</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- TITLE SECTION -->
+        <div class="title-section">
+            <div class="technical-label">📊 Strategic White Paper</div>
+            <h1 class="main-title">The Shift to <span>Agentic Commerce</span>: Rewriting the Digital Playbook</h1>
+            <p class="subtitle">An analysis of the Target, Google, and Apple Convergence and the emergence of the Universal Commerce Protocol (UCP) powered by Adobe Experience Platform</p>
+        </div>
+
+        <!-- UCP HERO SECTION -->
+        <div class="ucp-hero">
+            <div class="ucp-hero-content">
+                <h2>Universal Commerce Protocol (UCP)</h2>
+                <p>The <span class="highlight">common language</span> for platforms, agents and businesses to enable frictionless agentic commerce</p>
+                <p style="font-size: 1em; opacity: 0.9; margin-top: 30px;">UCP defines building blocks for agentic commerce—from discovering and buying to post purchase experiences—allowing the ecosystem to interoperate through one standard, without custom builds. Integrated with Adobe Experience Platform for real-time personalization and customer intelligence.</p>
+            </div>
+        </div>
+
+        <!-- UCP PROTOCOL ARCHITECTURE SECTION -->
+        <div class="section" id="ucp-protocol">
+            <h2 class="section-title"><span class="section-number">0</span> UCP Protocol Architecture</h2>
+            <p class="section-subtitle">Understanding the layered design that powers flexible, AI-native commerce integrations</p>
+            
+            <div style="background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%); border: 2px solid #0066cc; border-radius: 12px; padding: 40px; margin: 30px 0;">
+                <h3 style="color: #002D56; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">Modular, Layered Design</h3>
+                <p style="color: #6e6e6e; margin-bottom: 25px; line-height: 1.8;">UCP's architecture is intentionally layered and modular to avoid monolithic rigidity. This design allows rapid evolution and independent versioning across different functional areas:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0;">
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; padding: 25px; background: #fff; border-left: 5px solid #0066cc;">
+                        <div style="font-size: 1.3em; margin-bottom: 12px;">🛍️</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 10px;">Base Shopping Service</h4>
+                        <p style="color: #6e6e6e; font-size: 0.95em; line-height: 1.6;">Defines core commerce primitives (checkout session, line items, totals, status). Foundation: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 4px;">dev.ucp.shopping</code></p>
+                    </div>
+                    
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; padding: 25px; background: #fff; border-left: 5px solid #0066cc;">
+                        <div style="font-size: 1.3em; margin-bottom: 12px;">⚙️</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 10px;">Capabilities</h4>
+                        <p style="color: #6e6e6e; font-size: 0.95em; line-height: 1.6;">Self-contained functional modules (Checkout, Order, Catalog, Identity Linking). Each versioned independently for stability.</p>
+                    </div>
+                    
+                    <div style="border: 2px solid #e0e0e0; border-radius: 10px; padding: 25px; background: #fff; border-left: 5px solid #0066cc;">
+                        <div style="font-size: 1.3em; margin-bottom: 12px;">🔌</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 10px;">Extensions</h4>
+                        <p style="color: #6e6e6e; font-size: 0.95em; line-height: 1.6;">Optional domain-specific add-ons (loyalty, discounts, subscriptions, fulfillment). Merchants can define custom extensions without committee approval.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%); border: 2px solid #0066cc; border-radius: 12px; padding: 40px; margin: 30px 0;">
+                <h3 style="color: #002D56; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">Transport Protocols & Bindings</h3>
+                <p style="color: #6e6e6e; margin-bottom: 25px; line-height: 1.8;">UCP is transport-agnostic by design. Merchants advertise supported protocols, agents negotiate which to use:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 25px 0;">
+                    <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 12px;">🌐</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">REST</h4>
+                        <p style="color: #6e6e6e; font-size: 0.9em;">HTTPS+JSON for universal compatibility and traditional plugin integration</p>
+                    </div>
+                    
+                    <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 12px;">🤖</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">MCP (Model Context Protocol)</h4>
+                        <p style="color: #6e6e6e; font-size: 0.9em;">Direct tool invocation within LLM context for native AI agent integration</p>
+                    </div>
+                    
+                    <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 12px;">🔐</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">AP2 (Agent Payment Protocol)</h4>
+                        <p style="color: #6e6e6e; font-size: 0.9em;">Cryptographic mandates for autonomous AI-driven payment authorization</p>
+                    </div>
+                    
+                    <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 12px;">🔄</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">A2A (Agent-to-Agent)</h4>
+                        <p style="color: #6e6e6e; font-size: 0.9em;">Direct agent communication without HTTP request/response overhead</p>
+                    </div>
+                    
+                    <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 12px;">📱</div>
+                        <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">EP (Embedded Protocol)</h4>
+                        <p style="color: #6e6e6e; font-size: 0.9em;">Web-based interface embedding (iframe/SDK) for hosted checkout flows</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%); border: 2px solid #0066cc; border-radius: 12px; padding: 40px; margin: 30px 0;">
+                <h3 style="color: #002D56; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">Discovery & Capability Negotiation</h3>
+                <p style="color: #6e6e6e; margin-bottom: 25px; line-height: 1.8;">UCP flips the integration burden by making capabilities discoverable and negotiable in real-time:</p>
+                
+                <div style="background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; margin: 15px 0;">
+                    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+                        <div style="background: #0066cc; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+                        <div>
+                            <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">Merchant Profile Publication</h4>
+                            <p style="color: #6e6e6e; margin: 0;">Each merchant publishes a profile (JSON document) at a standard URL: <code style="background: #f0f0f0; padding: 2px 8px; border-radius: 4px;">https://merchant.com/.well-known/ucp</code> declaring capabilities, extensions, and transport endpoints.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+                        <div style="background: #0066cc; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+                        <div>
+                            <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">Agent Capability Advertisement</h4>
+                            <p style="color: #6e6e6e; margin: 0;">Each agent (platform) publishes its own profile describing which UCP features it can work with.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                        <div style="background: #0066cc; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">3</div>
+                        <div>
+                            <h4 style="color: #002D56; font-weight: 700; margin-bottom: 8px;">Real-Time Negotiation</h4>
+                            <p style="color: #6e6e6e; margin: 0;">When an agent initiates a transaction, it discovers the merchant's profile and includes a reference to its own profile in the request. Both sides negotiate which capabilities and extensions to activate.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #002D56; color: white; border-radius: 10px; padding: 25px; margin-top: 20px;">
+                    <p style="margin: 0; font-size: 0.95em; line-height: 1.7;"><strong>Result:</strong> Agents only request what merchants support. Merchants expose only what they've built. This eliminates custom integrations and allows new agents to work with any merchant instantly—no manual configuration needed.</p>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="section" id="architecture">
+            <h2 class="section-title"><span class="section-number">1</span> AEP Integration Architecture</h2>
+            <p class="section-subtitle">Connecting UCP events to Adobe Experience Platform for real-time personalization and audience activation</p>
+            
+            <div class="architecture-grid">
+                <div class="layer-card">
+                    <div class="layer-label">Layer 1: Source</div>
+                    <div class="layer-title">UCP-enabled Business Server</div>
+                    <div class="layer-desc">Emits commerce events (Checkout, Order, Identity Linking)</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-label">Layer 2: Transport</div>
+                    <div class="layer-title">AEP Web SDK / Edge Network</div>
+                    <div class="layer-desc">Collects UCP payloads and routes via Datastream</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-label">Layer 3: Schema</div>
+                    <div class="layer-title">XDM ExperienceEvent</div>
+                    <div class="layer-desc">Maps UCP JSON fields to Adobe Commerce Field Groups</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-label">Layer 4: Activation</div>
+                    <div class="layer-title">RTCDP Audience</div>
+                    <div class="layer-desc">Segments users for cross-channel activation</div>
+                </div>
+            </div>
+
+            <div class="key-benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-text"><strong>Transport Agnostic:</strong> UCP supports REST, MCP, and other protocols for maximum flexibility</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-text"><strong>Schema Standardization:</strong> XDM provides consistent data model across Adobe ecosystem</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-text"><strong>Real-Time Processing:</strong> Edge Network enables sub-second data ingestion and activation</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-text"><strong>AI-Native Design:</strong> Purpose-built to capture and activate AI agent transaction data</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UCP CORE CONCEPTS -->
+        <div class="ucp-concepts" id="ucp-concepts">
+            <h2 style="font-size: 2.5em; color: #002D56; margin-bottom: 20px; font-weight: 700;">UCP Core Concepts</h2>
+            <p style="font-size: 1.1em; color: #6e6e6e; margin-bottom: 50px; max-width: 800px;">Built for flexibility, security, and scale. UCP is the foundation for seamless interoperability in agentic commerce.</p>
+            
+            <div class="concepts-grid">
+                <div class="concept-card">
+                    <div class="concept-icon">🔐</div>
+                    <h3 class="concept-title">Secure & Private</h3>
+                    <p class="concept-desc">Built on proven security standards for account linking (OAuth 2.0) and secure payment (AP2) via payment mandates and verifiable credentials.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">⚖️</div>
+                    <h3 class="concept-title">Merchant Control</h3>
+                    <p class="concept-desc">Businesses remain at the center, ensuring retailers retain control of their business rules and remain the Merchant of Record.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">🔓</div>
+                    <h3 class="concept-title">Open & Extensible</h3>
+                    <p class="concept-desc">Open by design, enabling development of community-driven capabilities and extensions across verticals and use cases.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">⚡</div>
+                    <h3 class="concept-title">Frictionless Payments</h3>
+                    <p class="concept-desc">Open wallet ecosystem with interoperability between providers to ensure buyers can pay with their preferred methods.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">📈</div>
+                    <h3 class="concept-title">Scalable & Universal</h3>
+                    <p class="concept-desc">Surface-agnostic design supporting any commerce entity from small businesses to enterprise scale and all modalities.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="concept-icon">🔗</div>
+                    <h3 class="concept-title">Interoperable Standards</h3>
+                    <p class="concept-desc">Built on REST, JSON-RPC, MCP, and AP2 standards for seamless integration across platforms and agents.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: SCHEMA MAPPING -->
+        <div class="section" id="schema-mapping">
+            <h2 class="section-title"><span class="section-number">2</span> Schema Mapping: UCP to XDM</h2>
+            <p class="section-subtitle">Field-level transformation specification for UCP payload integration with Adobe Experience Data Model</p>
+            
+            <table class="technical-table">
+                <thead>
+                    <tr>
+                        <th>UCP Field (Source Payload)</th>
+                        <th>XDM Path (Target Schema)</th>
+                        <th>Transformation Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>capability: "checkout"</code></td>
+                        <td><code>eventType: "commerce.checkouts"</code></td>
+                        <td>Primary action type classification for commerce event stream</td>
+                    </tr>
+                    <tr>
+                        <td><code>cart.total_price</code></td>
+                        <td><code>commerce.order.priceTotal</code></td>
+                        <td>Aggregate cart value from AI agent-initiated session</td>
+                    </tr>
+                    <tr>
+                        <td><code>items[].product_id</code></td>
+                        <td><code>productListItems[].SKU</code></td>
+                        <td>Product catalog identifier for inventory correlation</td>
+                    </tr>
+                    <tr>
+                        <td><code>user.id</code> (OAuth)</td>
+                        <td><code>_id.identityMap.authenticatedState</code></td>
+                        <td>Cross-platform identity resolution linking AI session to known profile</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 3: IMPLEMENTATION -->
+        <div class="section" id="implementation">
+            <h2 class="section-title"><span class="section-number">3</span> Implementation: Edge Network API Integration</h2>
+            <p class="section-subtitle">Server-side event streaming specification for UCP commerce events</p>
+            
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="code-title">Adobe Edge Network API Call</div>
+                    <div class="code-lang">JSON Payload</div>
+                </div>
+                <div class="code-content"><span class="key">{</span>
+  <span class="key">"events"</span>: [<span class="key">{</span>
+    <span class="key">"xdm"</span>: <span class="key">{</span>
+      <span class="key">"eventType"</span>: <span class="string">"commerce.checkouts"</span>,
+      <span class="key">"commerce"</span>: <span class="key">{</span>
+        <span class="key">"checkouts"</span>: <span class="key">{</span> <span class="key">"value"</span>: <span class="number">1</span> <span class="key">}</span>
+      <span class="key">}</span>,
+      <span class="key">"productListItems"</span>: [<span class="key">{</span>
+        <span class="key">"SKU"</span>: <span class="string">"FLWR-99"</span>,
+        <span class="key">"name"</span>: <span class="string">"Blue Jacket"</span>,
+        <span class="key">"priceTotal"</span>: <span class="number">2500</span>
+      <span class="key">}</span>],
+      <span class="key">"_id"</span>: <span class="key">{</span>
+        <span class="key">"identityMap"</span>: <span class="key">{</span>
+          <span class="key">"Email"</span>: [<span class="key">{</span>
+            <span class="key">"id"</span>: <span class="string">"user@example.com"</span>,
+            <span class="key">"authenticatedState"</span>: <span class="string">"ambiguous"</span>
+          <span class="key">}</span>]
+        <span class="key">}</span>
+      <span class="key">}</span>
+    <span class="key">}</span>
+  <span class="key">}</span>]
+<span class="key">}</span></div>
+            </div>
+        </div>
+
+        <!-- REAL-TIME PERSONALIZATION SECTION -->
+        <div class="personalization-section" id="personalization">
+            <div class="container" style="max-width: 100%; padding: 0; margin: 0;">
+                <h2 style="font-size: 2.5em; color: #002D56; margin-bottom: 15px; font-weight: 700;">UCP + AEP: Real-Time Personalization Engine</h2>
+                <p style="font-size: 1.1em; color: #6e6e6e; margin-bottom: 50px; max-width: 900px;">Combining Universal Commerce Protocol with Adobe Experience Platform enables instantaneous personalization across all channels. Every UCP transaction triggers real-time customer profile enrichment and intelligent audience activation.</p>
+                
+                <div class="personalization-grid">
+                    <div class="personalization-content">
+                        <h3>How UCP + AEP Powers Personalization</h3>
+                        
+                        <div class="personalization-feature">
+                            <div class="feature-icon">1</div>
+                            <div class="feature-content">
+                                <h4>Instant Event Capture</h4>
+                                <p>UCP events from any commerce surface (chat, email, voice) are immediately transmitted to Adobe Edge Network for real-time processing</p>
+                            </div>
+                        </div>
+
+                        <div class="personalization-feature">
+                            <div class="feature-icon">2</div>
+                            <div class="feature-content">
+                                <h4>Profile Enrichment</h4>
+                                <p>Events automatically map to XDM schemas, enriching customer profiles with purchase intent, product affinity, and behavioral signals</p>
+                            </div>
+                        </div>
+
+                        <div class="personalization-feature">
+                            <div class="feature-icon">3</div>
+                            <div class="feature-content">
+                                <h4>Segment Qualification</h4>
+                                <p>RTCDP instantly qualifies customers into behavioral segments like "High-Intent AI Buyers" or "Cart Abandoners"</p>
+                            </div>
+                        </div>
+
+                        <div class="personalization-feature">
+                            <div class="feature-icon">4</div>
+                            <div class="feature-content">
+                                <h4>Omnichannel Activation</h4>
+                                <p>Segments activate immediately across email, web, mobile, and AI platforms with contextual, real-time messaging</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="personalization-visual">
+                        <div class="visual-content">
+                            <h4>Data Flow: UCP → AEP → Personalization</h4>
+                            
+                            <div class="data-flow-step">
+                                <div class="step-icon">1</div>
+                                <div class="step-label"><strong>UCP Event</strong> - Customer initiates checkout in AI agent</div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">→</div>
+                                <div class="step-label" style="flex: 1;"></div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">2</div>
+                                <div class="step-label"><strong>Edge Network</strong> - Real-time XDM mapping & identity resolution</div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">→</div>
+                                <div class="step-label" style="flex: 1;"></div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">3</div>
+                                <div class="step-label"><strong>RTCDP Update</strong> - Profile enriched with transaction data</div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">→</div>
+                                <div class="step-label" style="flex: 1;"></div>
+                            </div>
+
+                            <div class="data-flow-step">
+                                <div class="step-icon">4</div>
+                                <div class="step-label"><strong>Activation</strong> - Personalized experiences delivered instantly</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: LIVE DEMO -->
+        <div class="section" id="demo">
+            <h2 class="section-title"><span class="section-number">4</span> Live Demo: Omnichannel Journey Orchestration</h2>
+            <p class="section-subtitle">Interactive visualization of UCP + AEP data flow from AI agent interaction to cross-channel activation</p>
+            
+            <div class="demo-container">
+                <div class="demo-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🤖 AI Agent Interaction</div>
+                        <div class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span id="demo-status">Ready</span>
+                        </div>
+                    </div>
+                    <div class="chat-interface">
+                        <div class="chat-message user-message" id="user-msg">
+                            <div class="message-avatar">👤</div>
+                            <div class="message-content">
+                                <div class="message-text">Give me the best sale prices on a new refrigerator. I need French doors with ice maker.</div>
+                            </div>
+                        </div>
+                        <div class="chat-message agent-message" id="agent-msg">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <div class="message-text">Perfect! I found the Samsung RF28R7201SR - French doors with ice maker, now $1,899 (was $2,499). Premium stainless steel, 27.8 cu ft, WiFi enabled. Want me to add it to your cart?</div>
+                                <div class="product-card" id="product-card">
+                                    <div class="product-image">❄️</div>
+                                    <div class="product-details">
+                                        <div class="product-name">Samsung RF28R7201SR</div>
+                                        <div class="product-price" style="color: #22c55e;">$1,899 <span style="text-decoration: line-through; color: #6e6e6e; font-size: 0.9em;">$2,499</span></div>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart-btn" id="add-to-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-flow-visualization">
+                    <svg width="100%" height="300" id="flow-svg">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#0066cc" />
+                            </marker>
+                        </defs>
+                        
+                        <g id="ucp-node" opacity="0">
+                            <rect x="50" y="20" width="140" height="80" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="8"/>
+                            <text x="120" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#0066cc">UCP Event</text>
+                            <text x="120" y="70" text-anchor="middle" font-size="10" fill="#6e6e6e">checkout initiated</text>
+                            <text x="120" y="85" text-anchor="middle" font-size="9" fill="#6e6e6e">SKU: RF28R7201SR</text>
+                        </g>
+
+                        <g id="edge-node" opacity="0">
+                            <rect x="250" y="20" width="140" height="80" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="8"/>
+                            <text x="320" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#0066cc">Edge Network</text>
+                            <text x="320" y="70" text-anchor="middle" font-size="10" fill="#6e6e6e">XDM mapping</text>
+                            <text x="320" y="85" text-anchor="middle" font-size="9" fill="#6e6e6e">Identity resolved</text>
+                        </g>
+
+                        <g id="rtcdp-node" opacity="0">
+                            <rect x="450" y="20" width="140" height="80" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="8"/>
+                            <text x="520" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#0066cc">RTCDP</text>
+                            <text x="520" y="70" text-anchor="middle" font-size="10" fill="#6e6e6e">Profile updated</text>
+                            <text x="520" y="85" text-anchor="middle" font-size="9" fill="#6e6e6e">Segment: Active AI Buyer</text>
+                        </g>
+
+                        <g id="activation-node" opacity="0">
+                            <rect x="650" y="20" width="140" height="80" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="8"/>
+                            <text x="720" y="45" text-anchor="middle" font-size="12" font-weight="bold" fill="#0066cc">Activation</text>
+                            <text x="720" y="65" text-anchor="middle" font-size="9" fill="#6e6e6e">📧 Email</text>
+                            <text x="720" y="80" text-anchor="middle" font-size="9" fill="#6e6e6e">🌐 Web</text>
+                            <text x="720" y="95" text-anchor="middle" font-size="9" fill="#6e6e6e">📱 Mobile</text>
+                        </g>
+
+                        <line id="flow-1" x1="190" y1="60" x2="250" y2="60" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0"/>
+                        <line id="flow-2" x1="390" y1="60" x2="450" y2="60" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0"/>
+                        <line id="flow-3" x1="590" y1="60" x2="650" y2="60" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0"/>
+
+                        <circle id="data-packet" cx="120" cy="60" r="6" fill="#0066cc" opacity="0"/>
+                    </svg>
+
+                    <div class="event-log" id="event-log">
+                        <div class="log-header">System Event Log</div>
+                        <div class="log-entries" id="log-entries"></div>
+                    </div>
+                </div>
+
+                <div class="omnichannel-activation">
+                    <div class="channel-card" id="email-channel">
+                        <div class="channel-icon">📧</div>
+                        <div class="channel-name">Email Campaign</div>
+                        <div class="channel-message">"Your Samsung refrigerator is waiting! Complete purchase & get FREE delivery + installation."</div>
+                    </div>
+                    <div class="channel-card" id="web-channel">
+                        <div class="channel-icon">🌐</div>
+                        <div class="channel-name">Website Personalization</div>
+                        <div class="channel-message">"Welcome back! Your RF28R7201SR is in stock with 24-month warranty. Limited time: $600 savings."</div>
+                    </div>
+                    <div class="channel-card" id="mobile-channel">
+                        <div class="channel-icon">📱</div>
+                        <div class="channel-name">Mobile Push</div>
+                        <div class="channel-message">"⏰ Quick reminder: $1,899 Samsung refrigerator sale ends tomorrow. Financing available 0% APR."</div>
+                    </div>
+                </div>
+
+                <button class="demo-replay-btn" id="replay-btn">▶ Run Demo</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5: IMPLEMENTATION STEPS -->
+        <div class="section" id="steps">
+            <h2 class="section-title"><span class="section-number">5</span> Implementation Steps</h2>
+            <p class="section-subtitle">Systematic approach to deploying UCP + AEP integration</p>
+            
+            <div class="implementation-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Segment Definition</div>
+                    <div class="step-desc">Create "Active AI Buyers" segment in RTCDP by filtering users with <code>commerce.checkouts</code> events where source metadata indicates UCP-compatible AI agent</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Cross-Channel Activation</div>
+                    <div class="step-desc">Push segment to Adobe Target for web personalization and Journey Optimizer for email/SMS orchestration, enabling consistent messaging across touchpoints</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Personalization Execution</div>
+                    <div class="step-desc">Deploy contextual messaging when user returns to web properties: "Welcome back! Continue your purchase of [Product] that you started with your AI assistant"</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ECOSYSTEM & PARTNERS SECTION -->
+        <div class="ecosystem-section" id="ecosystem">
+            <h2>The UCP Ecosystem</h2>
+            <p style="text-align: center; font-size: 1.1em; opacity: 0.95; margin-bottom: 50px; max-width: 900px; margin-left: auto; margin-right: auto;">Industry leaders and innovators building the future of agentic commerce on Universal Commerce Protocol</p>
+            
+            <div class="ecosystem-grid">
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">🤖</div>
+                    <h4>AI Platforms</h4>
+                    <p>Google Gemini, OpenAI ChatGPT, and other LLM providers integrate UCP to enable seamless shopping experiences</p>
+                </div>
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">🛍️</div>
+                    <h4>Retailers</h4>
+                    <p>Target, Walmart, Best Buy, and global merchants leverage UCP to reach customers where they are</p>
+                </div>
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">💳</div>
+                    <h4>Payment Providers</h4>
+                    <p>Visa, Mastercard, PayPal, Stripe, and Adyen power secure, interoperable payments via AP2</p>
+                </div>
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">📊</div>
+                    <h4>Customer Data</h4>
+                    <p>Adobe, Salesforce, and enterprise CDPs provide real-time personalization and audience intelligence</p>
+                </div>
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">🏗️</div>
+                    <h4>Infrastructure</h4>
+                    <p>Shopify, Etsy, Wayfair and commerce platforms standardize on UCP for multi-agent compatibility</p>
+                </div>
+                <div class="ecosystem-card">
+                    <div class="ecosystem-icon">🔐</div>
+                    <h4>Security & Trust</h4>
+                    <p>OAuth 2.0, verifiable credentials, and cryptographic proof ensure enterprise-grade trust</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 60px;">
+                <p style="font-size: 1.2em; margin-bottom: 30px; font-weight: 600;">Building the future of commerce requires an open standard</p>
+                <a href="#" style="display: inline-block; background: white; color: #0066cc; padding: 16px 40px; border-radius: 8px; text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; border: 2px solid white;">Join the UCP Community</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateActiveNavLink() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = ['architecture', 'ucp-concepts', 'personalization', 'demo', 'steps', 'ecosystem'];
+            
+            let currentSection = 'architecture';
+            
+            sections.forEach(sectionId => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= 200) {
+                        currentSection = sectionId;
+                    }
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNavLink);
+        window.addEventListener('load', updateActiveNavLink);
+
+        let animationRunning = false;
+
+        function addLog(message, type = 'info') {
+            const logEntries = document.getElementById('log-entries');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-time">${timestamp}</span> ${message}`;
+            logEntries.appendChild(entry);
+            logEntries.scrollTop = logEntries.scrollHeight;
+        }
+
+        function animateElement(id, delay) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.style.transition = 'opacity 0.5s ease-out';
+                        element.style.opacity = '1';
+                    }
+                    resolve();
+                }, delay);
+            });
+        }
+
+        function animateDataPacket() {
+            return new Promise(resolve => {
+                const packet = document.getElementById('data-packet');
+                packet.style.opacity = '1';
+                
+                const positions = [
+                    {x: 120, y: 60, delay: 0},
+                    {x: 220, y: 60, delay: 800},
+                    {x: 320, y: 60, delay: 1600},
+                    {x: 420, y: 60, delay: 2400},
+                    {x: 520, y: 60, delay: 3200},
+                    {x: 620, y: 60, delay: 4000},
+                    {x: 720, y: 60, delay: 4800}
+                ];
+
+                let currentPos = 0;
+                const animate = () => {
+                    if (currentPos < positions.length) {
+                        setTimeout(() => {
+                            packet.setAttribute('cx', positions[currentPos].x);
+                            packet.setAttribute('cy', positions[currentPos].y);
+                            currentPos++;
+                            animate();
+                        }, currentPos === 0 ? 0 : 800);
+                    } else {
+                        setTimeout(() => {
+                            packet.style.opacity = '0';
+                            resolve();
+                        }, 500);
+                    }
+                };
+                animate();
+            });
+        }
+
+        async function runDemo() {
+            if (animationRunning) return;
+            animationRunning = true;
+
+            const replayBtn = document.getElementById('replay-btn');
+            const statusText = document.getElementById('demo-status');
+            replayBtn.disabled = true;
+            replayBtn.textContent = '⏸ Running...';
+            statusText.textContent = 'Processing';
+
+            document.getElementById('log-entries').innerHTML = '';
+
+            ['ucp-node', 'edge-node', 'rtcdp-node', 'activation-node', 'flow-1', 'flow-2', 'flow-3', 'data-packet'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.opacity = '0';
+            });
+
+            ['email-channel', 'web-channel', 'mobile-channel'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.opacity = '0.3';
+                    el.style.transform = 'scale(0.95)';
+                }
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            addLog('User query detected: "best sale prices on refrigerator"', 'info');
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            addLog('AI Agent recommendation: Samsung RF28R7201SR', 'success');
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            addLog('User action: Add to Cart clicked', 'info');
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await animateElement('ucp-node', 0);
+            addLog('🔵 UCP Event emitted: checkout capability', 'info');
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            await animateElement('flow-1', 0);
+            addLog('📤 Event sent to Adobe Edge Network', 'info');
+            
+            await animateElement('edge-node', 300);
+            await new Promise(resolve => setTimeout(resolve, 800));
+            addLog('🔄 XDM mapping: UCP → commerce.checkouts', 'success');
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            await animateElement('flow-2', 0);
+            addLog('📤 Profile update transmitted to RTCDP', 'info');
+            
+            await animateElement('rtcdp-node', 300);
+            await new Promise(resolve => setTimeout(resolve, 800));
+            addLog('👤 Real-Time Profile enriched', 'success');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLog('🎯 Segment qualification: Active AI Buyer', 'success');
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            await animateElement('flow-3', 0);
+            addLog('📤 Activation signal sent', 'info');
+            
+            await animateElement('activation-node', 300);
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            animateDataPacket();
+
+            addLog('📧 Email campaign triggered', 'success');
+            await new Promise(resolve => setTimeout(resolve, 300));
+            document.getElementById('email-channel').style.transition = 'all 0.5s ease-out';
+            document.getElementById('email-channel').style.opacity = '1';
+            document.getElementById('email-channel').style.transform = 'scale(1)';
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLog('🌐 Website personalization activated', 'success');
+            document.getElementById('web-channel').style.transition = 'all 0.5s ease-out';
+            document.getElementById('web-channel').style.opacity = '1';
+            document.getElementById('web-channel').style.transform = 'scale(1)';
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLog('📱 Mobile push notification queued', 'success');
+            document.getElementById('mobile-channel').style.transition = 'all 0.5s ease-out';
+            document.getElementById('mobile-channel').style.opacity = '1';
+            document.getElementById('mobile-channel').style.transform = 'scale(1)';
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            addLog('✅ Omnichannel activation complete', 'success');
+            statusText.textContent = 'Complete';
+
+            replayBtn.disabled = false;
+            replayBtn.textContent = '↻ Replay Demo';
+            animationRunning = false;
+        }
+
+        document.getElementById('replay-btn').addEventListener('click', runDemo);
+        document.getElementById('add-to-cart').addEventListener('click', (e) => {
+            e.preventDefault();
+            runDemo();
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => runDemo(), 1000);
+        });
+    </script>
+</body>
+</html>

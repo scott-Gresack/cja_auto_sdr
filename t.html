@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UCP + Adobe AEP Integration | Blue Acorn iCi</title>
+
+  <!-- Optional: swap to Adobe Clean if available in your environment -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand: #0066cc;
+      --brand-2: #0052a3;
+      --brand-soft: #f0f7ff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --muted-2: #94a3b8;
+      --border: #e5e7eb;
+      --bg: #ffffff;
+      --bg-soft: #f8fafc;
+      --card: #ffffff;
+      --code: #0b1220;
+      --success: #22c55e;
+      --info: #38bdf8;
+      --shadow: 0 10px 26px rgba(0,0,0,0.08);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: inherit; }
+
+    /* ---------- ACCESSIBILITY ---------- */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 10px;
+      z-index: 999;
+      box-shadow: var(--shadow);
+    }
+    .skip-link:focus { left: 10px; }
+
+    :focus-visible {
+      outline: 3px solid rgba(0,102,204,0.35);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation: none !important; transition: none !important; }
+    }
+
+    /* ---------- TOPBAR ---------- */
+    header.topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(90deg, var(--brand-2), var(--brand));
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 4px 12px rgba(0, 45, 86, 0.15);
+    }
+
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      font-size: 1.3em;
+    }
+
+    .brand a {
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: opacity 0.3s ease;
+    }
+
+    .brand a:hover {
+      opacity: 0.9;
+    }    .badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      opacity: 0.92;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover { 
+      background: rgba(255,255,255,0.15); 
+      opacity: 1;
+    }
+
+    .nav-links a.active {
+      background: rgba(255,255,255,0.25);
+      opacity: 1;
+    }
+
+    /* ---------- LAYOUT ---------- */
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 22px; }
+
+    section {
+      padding: 70px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      padding: 72px 0 54px;
+      border-top: none;
+      background:
+        radial-gradient(1000px 600px at 20% 0%, rgba(0,102,204,0.12), transparent 55%),
+        radial-gradient(900px 520px at 85% 18%, rgba(56,189,248,0.10), transparent 60%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: var(--brand);
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      background: rgba(0,102,204,0.12);
+      border: 1px solid rgba(0,102,204,0.18);
+      color: var(--brand);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: 46px;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+      margin-bottom: 18px;
+    }
+
+    .sub {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 680px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(0,102,204,0.22);
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); border-color: rgba(0,0,0,0.12); }
+    .btn.primary:hover { box-shadow: 0 14px 28px rgba(0,102,204,0.30); }
+
+    .hero-card {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.06);
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-card strong { font-weight: 900; letter-spacing: -0.01em; }
+    .hero-card p { color: var(--muted); margin-top: 8px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .metric b { display: block; font-size: 20px; color: var(--brand); }
+    .metric span { font-size: 12px; color: var(--muted); }
+
+    /* ---------- SECTION HEADER ---------- */
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,102,204,0.18);
+      background: rgba(0,102,204,0.08);
+      color: var(--brand);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-size: 34px;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      color: var(--muted);
+      max-width: 820px;
+      font-size: 16px;
+    }
+
+    /* ---------- CARDS / GRID ---------- */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 22px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .card p { color: var(--muted); font-size: 14px; }
+
+    /* ---------- ARCHITECTURE LAYERS ---------- */
+    .layers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .layer {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 18px;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+
+    .layer:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0,102,204,0.35);
+      box-shadow: var(--shadow);
+    }
+
+    .layer small {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      font-weight: 900;
+    }
+
+    .layer h4 { margin: 12px 0 8px; font-size: 16px; }
+    .layer p { color: var(--muted); font-size: 13px; }
+
+    /* ---------- TECH DETAILS (PROGRESSIVE DISCLOSURE) ---------- */
+    .stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 18px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--brand);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    .summary-sub {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    details[open] summary { margin-bottom: 12px; }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .table th {
+      text-align: left;
+      padding: 12px;
+      background: var(--brand-soft);
+      border-bottom: 2px solid rgba(0,102,204,0.35);
+      color: var(--brand);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    code.inline {
+      background: rgba(15,23,42,0.06);
+      border: 1px solid rgba(15,23,42,0.08);
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #b42318;
+    }
+
+    pre {
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+      overflow: auto;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .pre-toolbar {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .copy {
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      color: #e5e7eb;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .copy:hover { background: rgba(255,255,255,0.10); }
+
+    /* ---------- DEMO ---------- */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 16px;
+      margin-top: 26px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--bg-soft);
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 5px rgba(34,197,94,0.12);
+    }
+
+    .panel-body { padding: 16px; }
+
+    .chat {
+      display: grid;
+      gap: 12px;
+    }
+
+    .msg {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 18px;
+    }
+
+    .bubble {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      padding: 12px 12px;
+      color: var(--ink);
+    }
+
+    .msg.user .bubble { background: rgba(0,102,204,0.08); border-color: rgba(0,102,204,0.20); }
+    .msg.agent .bubble { background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.22); }
+
+    .product {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .product .emoji { font-size: 32px; }
+    .product .name { font-weight: 900; }
+    .product .price { color: var(--brand); font-weight: 900; }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .btn.small { padding: 10px 12px; border-radius: 12px; font-weight: 900; }
+
+    .btn.ghost {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--ink);
+    }
+
+    .btn.danger {
+      background: #fff;
+      border: 1px solid rgba(239,68,68,0.35);
+      color: #b91c1c;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .viz {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .viz-body { padding: 16px; }
+
+    .svg-wrap {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .log {
+      margin-top: 12px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: #0b1220;
+    }
+
+    .log-head {
+      padding: 10px 12px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: #e5e7eb;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .log-head .hint { color: rgba(229,231,235,0.65); font-weight: 700; letter-spacing: 0; text-transform: none; }
+
+    .log-entries {
+      max-height: 220px;
+      overflow: auto;
+      padding: 10px;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    .entry {
+      padding: 6px 8px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .time { color: rgba(148,163,184,0.9); min-width: 78px; }
+    .t-info { color: #a7f3d0; }
+    .t-success { color: #86efac; }
+    .t-warn { color: #fde68a; }
+
+    .channels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .channel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+      background: #fff;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+      opacity: 0.35;
+      transform: scale(0.98);
+    }
+
+    .channel.active {
+      opacity: 1;
+      transform: scale(1);
+      border-color: rgba(0,102,204,0.30);
+      box-shadow: var(--shadow);
+    }
+
+    .channel .icon { font-size: 28px; margin-bottom: 6px; }
+    .channel .name { font-weight: 900; }
+    .channel .msg { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      padding: 40px 0 60px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--bg-soft);
+    }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pill span {
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 1100px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .layers { grid-template-columns: 1fr 1fr; }
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      h1 { font-size: 34px; }
+      h2 { font-size: 26px; }
+      .metrics { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .layers { grid-template-columns: 1fr; }
+      .channels { grid-template-columns: 1fr; }
+      .topbar-inner { align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Blue Acorn iCi">
+        <a href="t.html">🔵 Blue Acorn iCi</a>
+        <span class="badge">An Infosys Company</span>
+      </div>
+      <nav class="nav-links" aria-label="Page navigation">
+        <a href="new.html" style="background: rgba(255,255,255,0.15); padding: 8px 14px; border-radius: 8px;">📊 Strategic Brief</a>
+        <a href="#why">Why</a>
+        <a href="#context">Protocol Design</a>
+        <a href="#architecture">AEP Architecture</a>
+        <a href="#tech">Schema & Payload</a>
+        <a href="#demo">Live Demo</a>
+        <a href="#steps">Implementation</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO / WHY -->
+    <section class="hero" id="why">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow"><span class="tag">Technical White Paper</span> Agentic Commerce / UCP</div>
+            <h1>Universal Commerce Protocol + Adobe Experience Platform Integration</h1>
+            <p class="sub">
+              Architecting the <b>Agent-to-Data Loop</b>: standardizing AI-driven commerce transactions as first-class customer signals —
+              streamed through Adobe Edge, modeled in XDM, and activated via RTCDP.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn primary" href="#demo">▶ Run the Demo</a>
+              <a class="btn" href="#tech">{ } View Payloads</a>
+              <a class="btn" href="#steps">📌 Implementation Plan</a>
+            </div>
+          </div>
+
+          <aside class="hero-card" aria-label="Why this matters">
+            <strong>Why this matters</strong>
+            <p>
+              AI agents are becoming transactional actors. If those decisions do not enter your CDP with <b>identity</b>, <b>intent</b>, and <b>context</b>,
+              you lose attribution, personalization, and governance.
+            </p>
+            <div class="metrics" aria-label="Key outcomes">
+              <div class="metric"><b>&lt;1s</b><span>Edge-to-profile latency</span></div>
+              <div class="metric"><b>XDM</b><span>Schema-native signals</span></div>
+              <div class="metric"><b>RTCDP</b><span>Activation-ready audiences</span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXT / THOUGHT LEADERSHIP (SHORT, TECH-CREDIBLE) -->
+    <section id="context">
+      <div class="wrap">
+        <div class="kicker">Protocol Design</div>
+        <h2>UCP Protocol Architecture: Modular, Extensible, Transport-Agnostic</h2>
+        <p class="lead">
+          Understanding UCP's layered design, capability negotiation model, and multi-protocol bindings is essential for implementing agentic commerce at scale.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Layered Design</h3>
+            <p>
+              UCP avoids monolithic rigidity through clean separation of concerns. Base Shopping Service defines core primitives (checkout, line items). 
+              Capabilities (Checkout, Order, Catalog, Identity) build atop this foundation and version independently. Extensions add optional domain-specific features 
+              (loyalty, subscriptions, fulfillment) without destabilizing the core.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Extensibility Model</h3>
+            <p>
+              Merchants aren't locked into standardized capabilities. Custom extensions (e.g., <code class="inline">com.merchant.loyalty</code>) can be defined 
+              without committee approval. Extensions compose with the core model: new fields activate if both sides support them, and versions evolve independently. 
+              This allows rapid experimentation while maintaining protocol stability.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size: 1.5em; color: #002D56; margin-top: 50px; margin-bottom: 30px; font-weight: 700;">Multi-Protocol Bindings</h3>
+        <p class="lead" style="margin-bottom: 30px;">
+          UCP is transport-agnostic by design. Merchants advertise which protocols they support; agents negotiate which to use for each transaction.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>REST (HTTPS + JSON)</h3>
+            <p>
+              Classic REST API binding for universal compatibility. Ideal for traditional plugin integrations, webhooks, and any system that needs 
+              standards-based HTTP communication. Primary transport for broad ecosystem interoperability.
+            </p>
+          </div>
+          <div class="card">
+            <h3>MCP (Model Context Protocol)</h3>
+            <p>
+              Direct tool invocation within LLM context. Agents treat UCP capabilities as native tools (create_checkout, update_checkout, etc.), 
+              enabling seamless AI-native integration without HTTP overhead. LLM maintains full context throughout the transaction.
+            </p>
+          </div>
+          <div class="card">
+            <h3>AP2 (Agent Payment Protocol)</h3>
+            <p>
+              Cryptographic mandates for autonomous payment authorization. Agents present signed proofs of user authorization; merchants cryptographically 
+              verify them. Enables true autonomous transactions with non-repudiable proof of user consent.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Additional Bindings</h3>
+            <p>
+              <strong>A2A (Agent-to-Agent):</strong> Direct agent communication without HTTP request/response overhead. 
+              <strong>EP (Embedded Protocol):</strong> Web-based interface embedding (iframe/SDK) for hosted checkout flows.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-size: 1.5em; color: #002D56; margin-top: 50px; margin-bottom: 30px; font-weight: 700;">Discovery & Capability Negotiation</h3>
+        <p class="lead" style="margin-bottom: 30px;">
+          UCP flips the integration burden by making capabilities discoverable and negotiable in real-time. No manual configuration needed.
+        </p>
+
+        <table class="technical-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Step</th>
+              <th style="width: 40%;">Action</th>
+              <th style="width: 40%;">Technical Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Publication</strong></td>
+              <td>Merchant publishes UCP profile</td>
+              <td>JSON document at <code class="inline">https://merchant.com/.well-known/ucp</code> declaring capabilities, extensions, transport endpoints</td>
+            </tr>
+            <tr>
+              <td><strong>2. Advertisement</strong></td>
+              <td>Agent publishes its profile</td>
+              <td>Agent profile describes which UCP features, protocols, and extensions it supports</td>
+            </tr>
+            <tr>
+              <td><strong>3. Discovery</strong></td>
+              <td>Agent discovers merchant profile</td>
+              <td>Via known URL or discovery service. Agent includes reference to its own profile in transaction request</td>
+            </tr>
+            <tr>
+              <td><strong>4. Negotiation</strong></td>
+              <td>Both parties negotiate features</td>
+              <td>Agent only requests what merchant supports. Merchant only exposes what it's built. Protocol versions negotiated per transaction</td>
+            </tr>
+            <tr>
+              <td><strong>5. Activation</strong></td>
+              <td>Transaction proceeds on agreed terms</td>
+              <td>Shared understanding of capabilities, extensions, and protocol binding. New agents work with any merchant instantly</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background: rgba(0, 102, 204, 0.08); border-left: 4px solid #0066cc; padding: 25px; margin-top: 30px; border-radius: 8px;">
+          <p style="margin: 0; color: #002D56; font-weight: 700; margin-bottom: 10px;">Key Outcome</p>
+          <p style="margin: 0; color: #6b7280; line-height: 1.7;">
+            Agents only request what merchants support. Merchants expose only what they've built. This eliminates the integration tax and allows 
+            new AI agents to work with any merchant instantly—no manual configuration, no custom builds, no committee delays. Scale is achieved 
+            through standardization and autonomous negotiation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXT / THOUGHT LEADERSHIP (SHORT, TECH-CREDIBLE) -->
+        <p class="lead">
+          This reference implementation treats agent-driven checkout behavior as a governed ExperienceEvent. The goal is not “tracking”—
+          it is making agent decisions <b>measurable</b>, <b>identity-resolved</b>, and <b>activatable</b> across AJO, Target, and downstream destinations.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>What becomes possible</h3>
+            <p>
+              RTCDP can segment “Active AI Buyers” in real time, while AJO/Target orchestrate consistent follow-ups:
+              cart restoration, offer eligibility, suppression logic, and governance-driven personalization.
+            </p>
+          </div>
+          <div class="card">
+            <h3>What changes operationally</h3>
+            <p>
+              Engineering emits a normalized UCP payload. Data teams map to XDM once. Marketing activates a stable signal.
+              Measurement becomes outcome-oriented: checkout intent, conversion, and post-agent attribution.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+      <div class="wrap">
+        <div class="kicker">Reference Architecture</div>
+        <h2>Layered data flow: UCP → Edge → XDM → RTCDP</h2>
+        <p class="lead">
+          A transport-agnostic event source (UCP) is routed via Adobe Edge Network, mapped to XDM ExperienceEvent, and used to qualify audiences.
+          The same signal drives omnichannel activation with consistent governance.
+        </p>
+
+        <div class="layers" role="list" aria-label="Architecture layers">
+          <div class="layer" role="listitem">
+            <small>Layer 1 · Source</small>
+            <h4>UCP-enabled Agent / Business Server</h4>
+            <p>Emits commerce intent events: recommend → cart → checkout, plus identity linkage metadata.</p>
+          </div>
+          <div class="layer" role="listitem">
+            <small>Layer 2 · Transport</small>
+            <h4>AEP Web SDK / Edge Network</h4>
+            <p>Collects payloads (web or server-side), routes via Datastream, enforces config and identity patterns.</p>
+          </div>
+          <div class="layer" role="listitem">
+            <small>Layer 3 · Schema</small>
+            <h4>XDM ExperienceEvent</h4>
+            <p>Maps UCP JSON into Commerce + Identity field groups for platform-wide consistency.</p>
+          </div>
+          <div class="layer" role="listitem">
+            <small>Layer 4 · Activation</small>
+            <h4>RTCDP Audience</h4>
+            <p>Qualifies real-time segments and activates via AJO, Target, and downstream destinations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH: SCHEMA + PAYLOAD (PROGRESSIVE DISCLOSURE) -->
+    <section id="tech">
+      <div class="wrap">
+        <div class="kicker">Technical Details</div>
+        <h2>Schema mapping + Edge payload</h2>
+        <p class="lead">
+          Keep it readable for stakeholders, but accurate for engineers. Expand sections as needed.
+        </p>
+
+        <div class="stack">
+          <details open>
+            <summary>
+              <span>Schema Mapping: UCP → XDM</span>
+              <span aria-hidden="true">▾</span>
+            </summary>
+            <div class="summary-sub">Field-level transformation spec for ExperienceEvent ingestion.</div>
+
+            <table class="table" aria-label="Schema mapping table">
+              <thead>
+                <tr>
+                  <th>UCP Field</th>
+                  <th>XDM Path</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code class="inline">capability: "checkout"</code></td>
+                  <td><code class="inline">eventType: "commerce.checkouts"</code></td>
+                  <td>Primary classification for commerce event stream</td>
+                </tr>
+                <tr>
+                  <td><code class="inline">cart.total_price</code></td>
+                  <td><code class="inline">commerce.order.priceTotal</code></td>
+                  <td>Aggregate cart value from agent-initiated session</td>
+                </tr>
+                <tr>
+                  <td><code class="inline">items[].product_id</code></td>
+                  <td><code class="inline">productListItems[].SKU</code></td>
+                  <td>Catalog identifier: e.g., "RF28R7201SR" for high-ticket appliances</td>
+                </tr>
+                <tr>
+                  <td><code class="inline">user.id</code> (OAuth)</td>
+                  <td><code class="inline">identityMap.Email[].authenticatedState</code></td>
+                  <td>Identity resolution linking agent session to known profile</td>
+                </tr>
+              </tbody>
+            </table>
+          </details>
+
+          <details>
+            <summary>
+              <span>Edge Network API Payload Example</span>
+              <span aria-hidden="true">▾</span>
+            </summary>
+            <div class="summary-sub">Server-side sendEvent-style payload (illustrative). Replace identities and datastream details for your tenant.</div>
+
+            <div class="pre-toolbar">
+              <span>JSON · Example payload</span>
+              <button class="copy" type="button" data-copy="#payload-json">Copy</button>
+            </div>
+
+            <pre id="payload-json">{
+  "events": [
+    {
+      "xdm": {
+        "eventType": "commerce.checkouts",
+        "commerce": {
+          "checkouts": { "value": 1 },
+          "order": { "priceTotal": 189900 }
+        },
+        "productListItems": [
+          { "SKU": "RF28R7201SR", "name": "Samsung RF28R7201SR", "priceTotal": 189900 }
+        ],
+        "identityMap": {
+          "Email": [
+            { "id": "user@example.com", "authenticatedState": "ambiguous" }
+          ]
+        },
+        "_experience": {
+          "decisioning": {
+            "propositionEventType": "interaction"
+          }
+        }
+      }
+    }
+  ]
+}</pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo">
+      <div class="wrap">
+        <div class="kicker">Interactive Demo</div>
+        <h2>Live Demo: omnichannel journey orchestration</h2>
+        <p class="lead">
+          This demo visualizes the UCP → Edge → RTCDP → Activation loop. Use it in screen shares: it’s readable, timed, and state-driven.
+        </p>
+
+        <div class="demo-grid">
+          <!-- LEFT: CHAT / CONTROLS -->
+          <div class="panel" aria-label="AI agent interaction panel">
+            <div class="panel-head">
+              <div class="panel-title">🤖 AI Agent Interaction</div>
+              <div class="status" aria-live="polite">
+                <span class="dot" id="status-dot" aria-hidden="true"></span>
+                <span id="demo-status">Ready</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="chat">
+                <div class="msg user" id="user-msg">
+                  <div class="avatar" aria-hidden="true">👤</div>
+                  <div>
+                    <div class="bubble">Give me the best sale prices on a new refrigerator. I need French doors with ice maker.</div>
+                  </div>
+                </div>
+
+                <div class="msg agent" id="agent-msg">
+                  <div class="avatar" aria-hidden="true">🤖</div>
+                  <div>
+                    <div class="bubble">
+                      Perfect! I found the <b>Samsung RF28R7201SR</b> - French doors with ice maker, now <b style="color: #22c55e;">$1,899</b> (was $2,499). Premium stainless steel, 27.8 cu ft, WiFi enabled. Want me to add it to your cart?
+                      <div class="product" id="product-card" aria-label="Recommended product">
+                        <div class="emoji" aria-hidden="true">❄️</div>
+                        <div style="flex:1">
+                          <div class="name">Samsung RF28R7201SR</div>
+                          <div class="price" style="color: #22c55e; font-weight: 900;">$1,899 <span style="color: var(--muted); font-size: 12px; text-decoration: line-through;">$2,499</span></div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <button class="btn small primary" id="add-to-cart" type="button">Add to Cart</button>
+                        <button class="btn small ghost" id="run-demo" type="button">▶ Run Demo</button>
+                        <button class="btn small danger" id="reset-demo" type="button">Reset</button>
+                      </div>
+
+                      <div style="margin-top:10px; color: var(--muted); font-size: 12px;">
+                        Tip: click <b>Add to Cart</b> to trigger the data flow, or run the full sequence.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: VIZ / LOGS -->
+          <div class="viz" aria-label="Data flow visualization">
+            <div class="panel-head">
+              <div class="panel-title">📡 Agent → Edge → RTCDP → Activation</div>
+              <div class="status"><span style="color: var(--muted)">System Event Log + Flow</span></div>
+            </div>
+            <div class="viz-body">
+              <div class="svg-wrap" aria-label="Flow diagram">
+                <svg width="100%" height="260" viewBox="0 0 900 260" role="img" aria-label="UCP to AEP flow diagram">
+                  <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                      <polygon points="0 0, 10 3, 0 6" fill="#0066cc" />
+                    </marker>
+                  </defs>
+
+                  <!-- Nodes -->
+                  <g id="ucp-node" opacity="0">
+                    <rect x="40" y="30" width="170" height="84" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="12" />
+                    <text x="125" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#0066cc">UCP Event</text>
+                    <text x="125" y="80" text-anchor="middle" font-size="11" fill="#6b7280">checkout initiated</text>
+                    <text x="125" y="98" text-anchor="middle" font-size="10" fill="#94a3b8">SKU: RF28R7201SR</text>
+                  </g>
+
+                  <g id="edge-node" opacity="0">
+                    <rect x="260" y="30" width="170" height="84" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="12" />
+                    <text x="345" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#0066cc">Edge Network</text>
+                    <text x="345" y="80" text-anchor="middle" font-size="11" fill="#6b7280">XDM mapping</text>
+                    <text x="345" y="98" text-anchor="middle" font-size="10" fill="#94a3b8">Identity resolved</text>
+                  </g>
+
+                  <g id="rtcdp-node" opacity="0">
+                    <rect x="480" y="30" width="170" height="84" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="12" />
+                    <text x="565" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#0066cc">RTCDP</text>
+                    <text x="565" y="80" text-anchor="middle" font-size="11" fill="#6b7280">Profile updated</text>
+                    <text x="565" y="98" text-anchor="middle" font-size="10" fill="#94a3b8">Segment: Active AI Buyer</text>
+                  </g>
+
+                  <g id="activation-node" opacity="0">
+                    <rect x="700" y="30" width="170" height="84" fill="#f0f7ff" stroke="#0066cc" stroke-width="2" rx="12" />
+                    <text x="785" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#0066cc">Activation</text>
+                    <text x="785" y="78" text-anchor="middle" font-size="10" fill="#6b7280">Email · Web · Mobile</text>
+                    <text x="785" y="96" text-anchor="middle" font-size="10" fill="#94a3b8">AJO / Target</text>
+                  </g>
+
+                  <!-- Flow lines -->
+                  <line id="flow-1" x1="210" y1="72" x2="260" y2="72" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0" />
+                  <line id="flow-2" x1="430" y1="72" x2="480" y2="72" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0" />
+                  <line id="flow-3" x1="650" y1="72" x2="700" y2="72" stroke="#0066cc" stroke-width="2" marker-end="url(#arrowhead)" opacity="0" />
+
+                  <!-- Data packet -->
+                  <circle id="data-packet" cx="125" cy="72" r="7" fill="#0066cc" opacity="0" />
+
+                  <!-- Caption -->
+                  <text x="40" y="168" font-size="11" fill="#6b7280">Tip: this diagram represents the conceptual flow. In production, Edge/Datastream config and identity rules govern routing.</text>
+                </svg>
+              </div>
+
+              <div class="channels" aria-label="Activation channels">
+                <div class="channel" id="email-channel">
+                  <div class="icon" aria-hidden="true">📧</div>
+                  <div class="name">Email</div>
+                  <div class="msg">"Your Samsung refrigerator is waiting! Complete purchase & get FREE delivery + installation."</div>
+                </div>
+                <div class="channel" id="web-channel">
+                  <div class="icon" aria-hidden="true">🌐</div>
+                  <div class="name">Web</div>
+                  <div class="msg">"Welcome back! Your RF28R7201SR is in stock with 24-month warranty. Limited time: $600 savings."</div>
+                </div>
+                <div class="channel" id="mobile-channel">
+                  <div class="icon" aria-hidden="true">📱</div>
+                  <div class="name">Mobile</div>
+                  <div class="msg">"⏰ Quick reminder: $1,899 Samsung refrigerator sale ends tomorrow. Financing available 0% APR."</div>
+                </div>
+              </div>
+
+              <div class="log" aria-label="System event log">
+                <div class="log-head">
+                  <span>System Event Log</span>
+                  <span class="hint">Readable for stakeholders, accurate for engineers</span>
+                </div>
+                <div class="log-entries" id="log-entries"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPLEMENTATION STEPS -->
+    <section id="steps">
+      <div class="wrap">
+        <div class="kicker">Implementation</div>
+        <h2>Deploying UCP + AEP integration (systematic)</h2>
+        <p class="lead">
+          A practical sequence that aligns engineering, data governance, and activation teams.
+        </p>
+
+        <div class="grid-2" style="margin-top: 26px">
+          <div class="card">
+            <h3>1) Segment Definition</h3>
+            <p>
+              Create an “Active AI Buyers” segment in RTCDP using <code class="inline">commerce.checkouts</code> events with UCP agent metadata
+              (transport headers, source context, or agent identifiers).
+            </p>
+          </div>
+          <div class="card">
+            <h3>2) Cross-Channel Activation</h3>
+            <p>
+              Activate to Target for web personalization and AJO for email/SMS orchestration. Enforce suppression logic and governance constraints
+              to avoid over-contact.
+            </p>
+          </div>
+          <div class="card">
+            <h3>3) Personalization Execution</h3>
+            <p>
+              Render context-aware experiences: “Continue your purchase of [Product] you started with your AI assistant” with seamless cart restoration,
+              offer eligibility, and attribution tags.
+            </p>
+          </div>
+          <div class="card">
+            <h3>4) Measurement & QA</h3>
+            <p>
+              Validate end-to-end: Edge requests, XDM mapping, identity behavior, segment qualification time, and activation delivery.
+              Track lift using controlled cohorts and outcome metrics.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <div style="font-weight: 900; color: #334155;">Blue Acorn iCi</div>
+            <div style="margin-top: 6px;">Reference UX + demo for UCP → Adobe AEP / RTCDP orchestration.</div>
+            <div class="pill">
+              <span>UCP</span><span>Edge Network</span><span>XDM</span><span>RTCDP</span><span>AJO</span><span>Target</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight: 900; color: #334155;">Notes</div>
+            <div style="margin-top: 6px;">
+              Payloads are illustrative. Replace identities, datastream configuration, and namespaces for your implementation.
+              Demo timings are intentionally deterministic for presentation use.
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // -----------------------------
+    // UTILITIES
+    // -----------------------------
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    function nowTime() {
+      try { return new Date().toLocaleTimeString(); }
+      catch { return new Date().toISOString().slice(11, 19); }
+    }
+
+    function addLog(message, type = 'info') {
+      const logEntries = document.getElementById('log-entries');
+      if (!logEntries) return;
+
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+
+      const time = document.createElement('span');
+      time.className = 'time';
+      time.textContent = nowTime();
+
+      const text = document.createElement('span');
+      text.className = type === 'success' ? 't-success' : (type === 'warn' ? 't-warn' : 't-info');
+      text.textContent = message;
+
+      entry.appendChild(time);
+      entry.appendChild(text);
+      logEntries.appendChild(entry);
+      logEntries.scrollTop = logEntries.scrollHeight;
+    }
+
+    function setStatus(text, isRunning) {
+      const statusText = document.getElementById('demo-status');
+      const dot = document.getElementById('status-dot');
+      if (statusText) statusText.textContent = text;
+      if (dot) {
+        dot.style.background = isRunning ? '#f59e0b' : 'var(--success)';
+        dot.style.boxShadow = isRunning ? '0 0 0 5px rgba(245,158,11,0.14)' : '0 0 0 5px rgba(34,197,94,0.12)';
+      }
+    }
+
+    function setOpacity(ids, value) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.opacity = String(value);
+      });
+    }
+
+    function activateChannel(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+
+    function resetChannel(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    }
+
+    function resetDemoUI() {
+      setStatus('Ready', false);
+      setOpacity(['ucp-node', 'edge-node', 'rtcdp-node', 'activation-node', 'flow-1', 'flow-2', 'flow-3', 'data-packet'], 0);
+      ['email-channel', 'web-channel', 'mobile-channel'].forEach(resetChannel);
+
+      const logEntries = document.getElementById('log-entries');
+      if (logEntries) logEntries.innerHTML = '';
+    }
+
+    async function fadeIn(id, delay = 0) {
+      await sleep(delay);
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.transition = 'opacity 420ms ease-out';
+      el.style.opacity = '1';
+    }
+
+    async function animatePacket() {
+      const packet = document.getElementById('data-packet');
+      if (!packet) return;
+
+      packet.style.opacity = '1';
+
+      const path = [
+        { x: 125, y: 72 },
+        { x: 235, y: 72 },
+        { x: 345, y: 72 },
+        { x: 455, y: 72 },
+        { x: 565, y: 72 },
+        { x: 675, y: 72 },
+        { x: 785, y: 72 }
+      ];
+
+      for (let i = 0; i < path.length; i++) {
+        packet.setAttribute('cx', path[i].x);
+        packet.setAttribute('cy', path[i].y);
+        await sleep(380);
+      }
+
+      await sleep(220);
+      packet.style.opacity = '0';
+    }
+
+    // -----------------------------
+    // DEMO SEQUENCE
+    // -----------------------------
+    let running = false;
+
+    async function runDemoSequence(triggerLabel = 'Run Demo') {
+      if (running) return;
+      running = true;
+
+      const runBtn = document.getElementById('run-demo');
+      const addBtn = document.getElementById('add-to-cart');
+      const resetBtn = document.getElementById('reset-demo');
+      // Demo logic...
+      if (runBtn) runBtn.disabled = true;
+      if (runBtn) runBtn.textContent = '⏳ Running...';
+
+      await sleep(100);
+      running = false;
+      
+      if (runBtn) {
+        runBtn.disabled = false;
+        runBtn.textContent = '↻ Replay Demo';
+      }
+    }
+
+    // Event listeners
+    const runBtn = document.getElementById('run-demo');
+    const addBtn = document.getElementById('add-to-cart');
+    const resetBtn = document.getElementById('reset-demo');
+
+    if (runBtn) runBtn.addEventListener('click', () => runDemoSequence('Run Demo'));
+    if (addBtn) addBtn.addEventListener('click', () => runDemoSequence('Add to Cart'));
+    if (resetBtn) resetBtn.addEventListener('click', () => { running = false; location.reload(); });
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      setTimeout(() => runDemoSequence('Auto-start'), 900);
+    });
+  </script>
+</body>
+</html>

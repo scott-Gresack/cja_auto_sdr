@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UCP + MarTech Real-Time Commerce Orchestration - Animated Demos of Dynamic B2B Ordering, Real-Time Cross-Sell, and Retention-at-Risk Scenarios">
+    <title>UCP + MarTech Orchestration | Real-Time Commerce Demos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        nav button:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+
+        nav button.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* SCENARIO SECTIONS */
+        .scenario {
+            display: none;
+        }
+
+        .scenario.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .scenario-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .scenario-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+
+        /* DEMO CONTAINER */
+        .demo-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* FLOW VISUALIZATION */
+        .flow-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid #667eea;
+        }
+
+        .flow-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .flow-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .flow-step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .flow-step-content {
+            flex: 1;
+        }
+
+        .flow-step-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        .flow-step-desc {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* ORCHESTRATION DIAGRAM */
+        .orchestration-svg {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #ecf0f1;
+            overflow: hidden;
+        }
+
+        .node {
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .node.active {
+            opacity: 1;
+        }
+
+        .node-box {
+            fill: white;
+            stroke: #667eea;
+            stroke-width: 2;
+        }
+
+        .node-box.active {
+            fill: #667eea;
+            stroke: #764ba2;
+        }
+
+        .node-text {
+            font-size: 12px;
+            font-weight: 600;
+            text-anchor: middle;
+            fill: #2c3e50;
+        }
+
+        .node-box.active + .node-text {
+            fill: white;
+        }
+
+        .flow-arrow {
+            stroke: #667eea;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .flow-arrow.active {
+            opacity: 1;
+        }
+
+        /* EVENT LOG */
+        .event-log {
+            background: #2c3e50;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #ecf0f1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #667eea;
+            padding-left: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-entry.event {
+            border-left-color: #3498db;
+            color: #3498db;
+        }
+
+        .log-entry.data {
+            border-left-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        .log-entry.action {
+            border-left-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .log-entry.success {
+            border-left-color: #27ae60;
+            color: #27ae60;
+        }
+
+        .log-entry.error {
+            border-left-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        /* METRICS PANEL */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 48px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+            border: 2px solid #bdc3c7;
+        }
+
+        .btn-secondary:hover {
+            background: #bdc3c7;
+            color: white;
+        }
+
+        /* ACTIVATION CHANNELS */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .channel-card {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            opacity: 0.4;
+            transition: all 0.5s ease;
+        }
+
+        .channel-card.active {
+            opacity: 1;
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            transform: scale(1.05);
+        }
+
+        .channel-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .channel-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .channel-message {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        /* DETAILS SECTION */
+        .details-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #667eea;
+        }
+
+        .details-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .details-list {
+            list-style: none;
+        }
+
+        .details-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+
+        .details-list li::before {
+            content: "✓";
+            color: #667eea;
+            font-weight: 700;
+            min-width: 20px;
+        }
+
+        /* SCENARIO HEADER */
+        .scenario-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .scenario-number {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* TABS SECTION */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* DATA VISUALIZATION */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.pending {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .status-badge.processing {
+            background: #a8dadc;
+            color: #2c3e50;
+        }
+
+        .status-badge.success {
+            background: #81c784;
+            color: white;
+        }
+
+        .status-badge.activated {
+            background: #667eea;
+            color: white;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #7f8c8d;
+            border-top: 1px solid #ecf0f1;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .scenario-title {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            nav button {
+                width: 100%;
+            }
+
+            .demo-grid {
+                gap: 1rem;
+            }
+
+            button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">🚀 UCP + MarTech</a>
+            <nav>
+                <button onclick="showScenario(1)" class="scenario-btn active">Scenario 1: B2B Ordering</button>
+                <button onclick="showScenario(2)" class="scenario-btn">Scenario 2: Cross-Sell</button>
+                <button onclick="showScenario(3)" class="scenario-btn">Scenario 3: Retention</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- SCENARIO 1: DYNAMIC B2B ORDERING -->
+        <section id="scenario-1" class="scenario active">
+            <div class="scenario-header">
+                <div class="scenario-number">Scenario 1</div>
+                <h1 class="scenario-title">🏢 Dynamic B2B Ordering</h1>
+                <p class="scenario-subtitle">Enterprise procurement with UCP discovery, dynamic composition, and approval workflow orchestration</p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-grid">
+                    <div class="flow-section">
+                        <div class="flow-title">🔄 Orchestration Workflow</div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">1</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Customer Initiates Request</div>
+                                <div class="flow-step-desc">Enterprise procurement team opens B2B portal or AI agent</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">2</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">UCP Discovery</div>
+                                <div class="flow-step-desc">Agent discovers: pricing, inventory, fulfillment services</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">3</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Context Loading</div>
+                                <div class="flow-step-desc">CDP pulls segment (Enterprise), LTV ($450K), historical preferences</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">4</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Dynamic Composition</div>
+                                <div class="flow-step-desc">Assemble offer: volume discount (15%), net-30 terms, 2-day delivery</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">5</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Approval Workflow</div>
+                                <div class="flow-step-desc">Route through approval chain, send to ERP system</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">6</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Omnichannel Activation</div>
+                                <div class="flow-step-desc">Send notifications: email, SMS, in-app, ERP webhook</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <svg class="orchestration-svg" width="100%" height="600" id="diagram-1">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#667eea" />
+                                </marker>
+                            </defs>
+
+                            <!-- UCP Discovery -->
+                            <rect class="node-box" id="node-ucp" x="20" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-ucp" x="80" y="55">UCP Discovery</text>
+
+                            <!-- Context Load -->
+                            <line class="flow-arrow" id="arrow-1" x1="140" y1="50" x2="190" y2="50" />
+                            <rect class="node-box" id="node-context" x="190" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-context" x="250" y="55">CDP Context</text>
+
+                            <!-- Composition -->
+                            <line class="flow-arrow" id="arrow-2" x1="310" y1="50" x2="360" y2="50" />
+                            <rect class="node-box" id="node-compose" x="360" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-compose" x="420" y="55">Composition</text>
+
+                            <!-- Approval -->
+                            <line class="flow-arrow" id="arrow-3" x1="420" y1="80" x2="420" y2="130" />
+                            <rect class="node-box" id="node-approval" x="360" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-approval" x="420" y="165">Approval</text>
+
+                            <!-- ERP Integration -->
+                            <line class="flow-arrow" id="arrow-4" x1="360" y1="160" x2="310" y2="160" />
+                            <rect class="node-box" id="node-erp" x="190" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-erp" x="250" y="165">ERP Sync</text>
+
+                            <!-- Activation -->
+                            <line class="flow-arrow" id="arrow-5" x1="190" y1="190" x2="190" y2="240" />
+                            <rect class="node-box" id="node-activate" x="130" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-activate" x="190" y="275">Activation</text>
+
+                            <!-- Attribution -->
+                            <line class="flow-arrow" id="arrow-6" x1="130" y1="270" x2="80" y2="270" />
+                            <rect class="node-box" id="node-attr" x="20" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-attr" x="80" y="275">Attribution</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="event-log" id="log-1"></div>
+
+                <div class="details-section">
+                    <div class="details-title">📊 Order Details</div>
+                    <table class="data-table">
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Customer Segment</td>
+                            <td>Enterprise Key Account</td>
+                            <td><span class="status-badge success">Matched</span></td>
+                        </tr>
+                        <tr>
+                            <td>Lifetime Value</td>
+                            <td>$450,000</td>
+                            <td><span class="status-badge success">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Volume Discount</td>
+                            <td>15% (500+ units)</td>
+                            <td><span class="status-badge success">Applied</span></td>
+                        </tr>
+                        <tr>
+                            <td>Payment Terms</td>
+                            <td>Net-30</td>
+                            <td><span class="status-badge success">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Delivery Window</td>
+                            <td>2 days (premium fulfillment)</td>
+                            <td><span class="status-badge success">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Approval Status</td>
+                            <td id="approval-status">Pending</td>
+                            <td id="approval-badge"><span class="status-badge pending">Pending</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="channels-grid" id="channels-1">
+                    <div class="channel-card">
+                        <div class="channel-icon">📧</div>
+                        <div class="channel-name">Email Confirmation</div>
+                        <div class="channel-message">Order confirmation with net-30 terms and delivery tracking</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">🔗</div>
+                        <div class="channel-name">ERP Webhook</div>
+                        <div class="channel-message">Real-time order sync to SAP/Oracle for inventory management</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">📱</div>
+                        <div class="channel-name">Portal Notification</div>
+                        <div class="channel-message">In-app alert with approval chain status and tracking link</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">💬</div>
+                        <div class="channel-name">SMS Alert</div>
+                        <div class="channel-message">Quick status update: "Your order approved. Ships tomorrow."</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="runDemo1()">▶ Run B2B Ordering Demo</button>
+                    <button class="btn-secondary" onclick="resetDemo1()">↻ Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENARIO 2: REAL-TIME CROSS-SELL -->
+        <section id="scenario-2" class="scenario">
+            <div class="scenario-header">
+                <div class="scenario-number">Scenario 2</div>
+                <h1 class="scenario-title">🎯 Real-Time Cross-Sell Personalization</h1>
+                <p class="scenario-subtitle">Instant recommendation engine, inventory validation, and dynamic offer assembly</p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-grid">
+                    <div class="flow-section">
+                        <div class="flow-title">⚡ Real-Time Decisioning</div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">1</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Cart Trigger Event</div>
+                                <div class="flow-step-desc">High-margin item added (Samsung 55" TV, $1,299)</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">2</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Recommendation Engine</div>
+                                <div class="flow-step-desc">Identifies compatible products (soundbar, wall mount, warranty) with 82% co-purchase correlation</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">3</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Inventory Check</div>
+                                <div class="flow-step-desc">Validates availability at preferred fulfillment location (same-day shipping eligible)</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">4</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Offer Calculation</div>
+                                <div class="flow-step-desc">Dynamic discount: $299 soundbar → 25% off ($224.25) to maximize basket</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">5</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Compliance Check</div>
+                                <div class="flow-step-desc">Verify promotion budget, eligibility, regulatory compliance</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">6</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Multi-Channel Activation</div>
+                                <div class="flow-step-desc">Show on web (immediate), queue SMS (2 min), email campaign</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <svg class="orchestration-svg" width="100%" height="600" id="diagram-2">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#667eea" />
+                                </marker>
+                            </defs>
+
+                            <!-- Cart Event -->
+                            <rect class="node-box" id="node-cart" x="20" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-cart" x="80" y="55">Cart Event</text>
+
+                            <!-- Recommendation -->
+                            <line class="flow-arrow" id="arrow-7" x1="140" y1="50" x2="190" y2="50" />
+                            <rect class="node-box" id="node-rec" x="190" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-rec" x="250" y="55">Recommend</text>
+
+                            <!-- Inventory -->
+                            <line class="flow-arrow" id="arrow-8" x1="310" y1="50" x2="360" y2="50" />
+                            <rect class="node-box" id="node-inv" x="360" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-inv" x="420" y="55">Inventory</text>
+
+                            <!-- Offer Engine -->
+                            <line class="flow-arrow" id="arrow-9" x1="420" y1="80" x2="420" y2="130" />
+                            <rect class="node-box" id="node-offer" x="360" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-offer" x="420" y="165">Offer Engine</text>
+
+                            <!-- Compliance -->
+                            <line class="flow-arrow" id="arrow-10" x1="360" y1="160" x2="310" y2="160" />
+                            <rect class="node-box" id="node-compliance" x="190" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-compliance" x="250" y="165">Compliance</text>
+
+                            <!-- Activation -->
+                            <line class="flow-arrow" id="arrow-11" x1="190" y1="190" x2="190" y2="240" />
+                            <rect class="node-box" id="node-activate2" x="130" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-activate2" x="190" y="275">Activation</text>
+
+                            <!-- Success -->
+                            <line class="flow-arrow" id="arrow-12" x1="130" y1="270" x2="80" y2="270" />
+                            <rect class="node-box" id="node-success" x="20" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-success" x="80" y="275">Success ✓</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="event-log" id="log-2"></div>
+
+                <div class="details-section">
+                    <div class="details-title">💳 Cart Update Sequence</div>
+                    <table class="data-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Base Price</th>
+                            <th>Discount</th>
+                            <th>Final Price</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Samsung 55" TV 4K</td>
+                            <td>$1,299.00</td>
+                            <td>—</td>
+                            <td>$1,299.00</td>
+                            <td><span class="status-badge success">In Cart</span></td>
+                        </tr>
+                        <tr>
+                            <td>Samsung Soundbar HW-Q900</td>
+                            <td>$299.00</td>
+                            <td id="discount-recommend">Pending</td>
+                            <td id="price-recommend">Pending</td>
+                            <td><span class="status-badge pending">Recommended</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wall Mount Bracket</td>
+                            <td>$49.99</td>
+                            <td id="discount-mount">Pending</td>
+                            <td id="price-mount">Pending</td>
+                            <td><span class="status-badge pending">Suggested</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Basket Total</strong></td>
+                            <td id="total-base">$1,299.00</td>
+                            <td id="total-discount">—</td>
+                            <td id="total-final"><strong>$1,299.00</strong></td>
+                            <td><span class="status-badge processing" id="total-badge">Active</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="channels-grid" id="channels-2">
+                    <div class="channel-card">
+                        <div class="channel-icon">🌐</div>
+                        <div class="channel-name">Web Display</div>
+                        <div class="channel-message">"Bundle & Save! Add soundbar for $224.25 (save $74.75)"</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">💬</div>
+                        <div class="channel-name">SMS (2 min)</div>
+                        <div class="channel-message">"Your TV order + soundbar = perfect match. Claim deal now."</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">📧</div>
+                        <div class="channel-name">Email Campaign</div>
+                        <div class="channel-message">"Complete your home theater setup with 25% off accessories"</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">🔔</div>
+                        <div class="channel-name">In-App Push</div>
+                        <div class="channel-message">"Limited time: Free shipping on TV + soundbar bundle"</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="runDemo2()">▶ Run Cross-Sell Demo</button>
+                    <button class="btn-secondary" onclick="resetDemo2()">↻ Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENARIO 3: RETENTION AT RISK -->
+        <section id="scenario-3" class="scenario">
+            <div class="scenario-header">
+                <div class="scenario-number">Scenario 3</div>
+                <h1 class="scenario-title">🎁 Retention-at-Risk Intervention</h1>
+                <p class="scenario-subtitle">Intelligent re-engagement with personalized offers and strategic channel sequencing</p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-grid">
+                    <div class="flow-section">
+                        <div class="flow-title">💡 Retention Strategy</div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">1</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Inactivity Detection</div>
+                                <div class="flow-step-desc">Customer inactive 60+ days despite $8,200 historical AOV</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">2</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Risk Segmentation</div>
+                                <div class="flow-step-desc">Flagged: high-value, at-risk, churn-sensitive, retention-responsive</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">3</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Personalization</div>
+                                <div class="flow-step-desc">Generate product recommendations from purchase history (luxury brand preference)</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">4</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Dynamic Offer</div>
+                                <div class="flow-step-desc">Special retention offer: 20% off + exclusive VIP access + gift with purchase</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">5</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Channel Selection</div>
+                                <div class="flow-step-desc">Email (primary) → SMS (2h later) → In-app (retargeting) → Loyalty push</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-number">6</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Measurement</div>
+                                <div class="flow-step-desc">Track re-engagement rate, lift attribution, CLV recovery</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <svg class="orchestration-svg" width="100%" height="600" id="diagram-3">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#667eea" />
+                                </marker>
+                            </defs>
+
+                            <!-- Detection -->
+                            <rect class="node-box" id="node-detect" x="20" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-detect" x="80" y="55">Detection</text>
+
+                            <!-- Risk Segment -->
+                            <line class="flow-arrow" id="arrow-13" x1="140" y1="50" x2="190" y2="50" />
+                            <rect class="node-box" id="node-risk" x="190" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-risk" x="250" y="55">Risk Score</text>
+
+                            <!-- Personalization -->
+                            <line class="flow-arrow" id="arrow-14" x1="310" y1="50" x2="360" y2="50" />
+                            <rect class="node-box" id="node-personal" x="360" y="20" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-personal" x="420" y="55">Personalize</text>
+
+                            <!-- Offer -->
+                            <line class="flow-arrow" id="arrow-15" x1="420" y1="80" x2="420" y2="130" />
+                            <rect class="node-box" id="node-offer3" x="360" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-offer3" x="420" y="165">Dynamic Offer</text>
+
+                            <!-- Channel Strategy -->
+                            <line class="flow-arrow" id="arrow-16" x1="360" y1="160" x2="310" y2="160" />
+                            <rect class="node-box" id="node-channel" x="190" y="130" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-channel" x="250" y="165">Channel Plan</text>
+
+                            <!-- Activation -->
+                            <line class="flow-arrow" id="arrow-17" x1="190" y1="190" x2="190" y2="240" />
+                            <rect class="node-box" id="node-activate3" x="130" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-activate3" x="190" y="275">Activate</text>
+
+                            <!-- Measure -->
+                            <line class="flow-arrow" id="arrow-18" x1="130" y1="270" x2="80" y2="270" />
+                            <rect class="node-box" id="node-measure" x="20" y="240" width="120" height="60" rx="8"/>
+                            <text class="node-text" id="text-measure" x="80" y="275">Measure</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="event-log" id="log-3"></div>
+
+                <div class="metrics-grid" id="metrics-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-inactivity">60</div>
+                        <div class="metric-label">Days Inactive</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-ltv">$8.2K</div>
+                        <div class="metric-label">Historical AOV</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-risk">92%</div>
+                        <div class="metric-label">Churn Risk</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="metric-potential">$24.6K</div>
+                        <div class="metric-label">Potential CLV Recovery</div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-title">📊 Re-engagement Campaign Timeline</div>
+                    <table class="data-table">
+                        <tr>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Channel</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>T+0:00</td>
+                            <td>Campaign triggered: "We miss you! 20% off exclusive items"</td>
+                            <td>📧 Email</td>
+                            <td><span class="status-badge pending" id="status-email">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>T+0:15</td>
+                            <td>CDP enriches profile with current product recommendations</td>
+                            <td>🔄 CDP</td>
+                            <td><span class="status-badge pending" id="status-cdp">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>T+2:00</td>
+                            <td>Automated SMS: "Exclusive offer just for you - shop now"</td>
+                            <td>💬 SMS</td>
+                            <td><span class="status-badge pending" id="status-sms">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>T+4:00</td>
+                            <td>In-app push (if user opens app): Personalized product carousel</td>
+                            <td>📱 App</td>
+                            <td><span class="status-badge pending" id="status-app">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>T+24:00</td>
+                            <td>Loyalty program reminder: "Double points on next purchase"</td>
+                            <td>🎁 Loyalty</td>
+                            <td><span class="status-badge pending" id="status-loyalty">Pending</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="channels-grid" id="channels-3">
+                    <div class="channel-card">
+                        <div class="channel-icon">📧</div>
+                        <div class="channel-name">Email (Primary)</div>
+                        <div class="channel-message">"Welcome back! Your favorites are back in stock + 20% off"</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">💬</div>
+                        <div class="channel-name">SMS (Follow-up)</div>
+                        <div class="channel-message">"Quick reminder: Exclusive offer expires in 48 hours"</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">📱</div>
+                        <div class="channel-name">In-App Push</div>
+                        <div class="channel-message">"Personalized picks based on your style—shop curated collection"</div>
+                    </div>
+                    <div class="channel-card">
+                        <div class="channel-icon">🎁</div>
+                        <div class="channel-name">Loyalty Bonus</div>
+                        <div class="channel-message">"2x points this week + free gift on next $200+ purchase"</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="runDemo3()">▶ Run Retention Demo</button>
+                    <button class="btn-secondary" onclick="resetDemo3()">↻ Reset</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>UCP + MarTech Real-Time Commerce Orchestration Demos | Powered by Adobe Experience Platform</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">© 2026 Blue Acorn iCi</p>
+    </footer>
+
+    <script>
+        function showScenario(num) {
+            // Hide all scenarios
+            document.querySelectorAll('.scenario').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected scenario
+            document.getElementById(`scenario-${num}`).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function addLog(logId, message, type = 'event') {
+            const log = document.getElementById(logId);
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ===== SCENARIO 1: B2B ORDERING =====
+        async function runDemo1() {
+            const log = 'log-1';
+            document.getElementById(log).innerHTML = '';
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Running...';
+
+            try {
+                addLog(log, '📍 Enterprise customer initiates B2B order request', 'event');
+                await sleep(600);
+
+                addLog(log, '🔍 UCP Discovery: Locating available services...', 'event');
+                await activateNode('node-ucp', 1);
+                await sleep(800);
+
+                addLog(log, '✓ Pricing service located (v2.1)', 'success');
+                addLog(log, '✓ Inventory service located (v3.0)', 'success');
+                addLog(log, '✓ Fulfillment service located (v1.8)', 'success');
+                await sleep(800);
+
+                addLog(log, '📊 Loading CDP context...', 'data');
+                await activateNode('node-context', 1);
+                await activateArrow('arrow-1', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Customer segment: Enterprise Key Account', 'success');
+                addLog(log, '✓ LTV: $450,000', 'success');
+                addLog(log, '✓ Preference: Net-30 terms, same-region delivery', 'success');
+                await sleep(800);
+
+                addLog(log, '⚙️ Dynamic composition engine assembling offer...', 'action');
+                await activateNode('node-compose', 1);
+                await activateArrow('arrow-2', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Volume discount: 15% (500+ units)', 'success');
+                addLog(log, '✓ Payment terms: Net-30 (matched preference)', 'success');
+                addLog(log, '✓ Delivery: Premium 2-day (Dallas DC)', 'success');
+                await sleep(800);
+
+                addLog(log, '🔄 Routing to approval workflow...', 'action');
+                await activateNode('node-approval', 1);
+                await activateArrow('arrow-3', 1);
+                await sleep(800);
+
+                addLog(log, '✓ Approval step 1: Procurement manager approved', 'success');
+                addLog(log, '✓ Approval step 2: Finance authorized', 'success');
+                addLog(log, '✓ Approval step 3: Executive sign-off', 'success');
+                document.getElementById('approval-status').textContent = 'Approved';
+                document.getElementById('approval-badge').innerHTML = '<span class="status-badge success">Approved ✓</span>';
+                await sleep(800);
+
+                addLog(log, '🔗 Syncing to ERP system...', 'action');
+                await activateNode('node-erp', 1);
+                await activateArrow('arrow-4', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Order created in SAP', 'success');
+                addLog(log, '✓ Inventory allocated', 'success');
+                addLog(log, '✓ Fulfillment scheduled', 'success');
+                await sleep(800);
+
+                addLog(log, '📢 Activating omnichannel notifications...', 'action');
+                await activateNode('node-activate', 1);
+                await activateArrow('arrow-5', 1);
+                await activateChannels('channels-1');
+                await sleep(800);
+
+                addLog(log, '✓ Email confirmation sent', 'success');
+                addLog(log, '✓ ERP webhook delivered', 'success');
+                addLog(log, '✓ Portal notification posted', 'success');
+                addLog(log, '✓ SMS alert dispatched', 'success');
+                await sleep(800);
+
+                addLog(log, '📊 Recording attribution...', 'action');
+                await activateNode('node-attr', 1);
+                await activateArrow('arrow-6', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Journey tracked: discovery → composition → approval → fulfillment', 'success');
+                addLog(log, '✓ Multi-touch attribution recorded', 'success');
+                addLog(log, '🎉 B2B Order orchestration complete!', 'success');
+
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '↻ Run B2B Ordering Demo';
+            }
+        }
+
+        // ===== SCENARIO 2: REAL-TIME CROSS-SELL =====
+        async function runDemo2() {
+            const log = 'log-2';
+            document.getElementById(log).innerHTML = '';
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Running...';
+
+            try {
+                addLog(log, '🛒 Customer adds Samsung 55" TV ($1,299) to cart', 'event');
+                await activateNode('node-cart', 1);
+                await sleep(800);
+
+                addLog(log, '🎯 Cart trigger activated for high-margin item', 'event');
+                await sleep(400);
+
+                addLog(log, '🤖 Recommendation engine analyzing...', 'action');
+                await activateNode('node-rec', 1);
+                await activateArrow('arrow-7', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Identified compatible soundbar (82% co-purchase correlation)', 'success');
+                addLog(log, '✓ Wall mount bracket suggested (79% correlation)', 'success');
+                addLog(log, '✓ Premium warranty add-on recommended', 'success');
+                await sleep(800);
+
+                addLog(log, '📦 Checking inventory availability...', 'action');
+                await activateNode('node-inv', 1);
+                await activateArrow('arrow-8', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Soundbar in stock (same-day shipping available)', 'success');
+                addLog(log, '✓ Wall mount available (2-day standard)', 'success');
+                addLog(log, '✓ Preferred fulfillment location: Downtown DC', 'success');
+                await sleep(800);
+
+                addLog(log, '💰 Dynamic offer calculation...', 'action');
+                await activateNode('node-offer', 1);
+                await activateArrow('arrow-9', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Soundbar discount: 25% off ($299 → $224.25)', 'success');
+                document.getElementById('discount-recommend').textContent = '-$74.75 (25%)';
+                document.getElementById('price-recommend').textContent = '$224.25';
+                addLog(log, '✓ Wall mount discount: 15% off ($49.99 → $42.49)', 'success');
+                document.getElementById('discount-mount').textContent = '-$7.50 (15%)';
+                document.getElementById('price-mount').textContent = '$42.49';
+
+                const newTotal = 1299 + 224.25 + 42.49;
+                const savings = 74.75 + 7.50;
+                document.getElementById('total-base').textContent = '$1,348.99';
+                document.getElementById('total-discount').textContent = `-$${savings.toFixed(2)}`;
+                document.getElementById('total-final').innerHTML = `<strong>$${newTotal.toFixed(2)}</strong>`;
+                document.getElementById('total-badge').textContent = 'Updated';
+                
+                await sleep(800);
+
+                addLog(log, '✔️ Compliance verification...', 'action');
+                await activateNode('node-compliance', 1);
+                await activateArrow('arrow-10', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Promotion budget available: $5,000 remaining', 'success');
+                addLog(log, '✓ Customer eligible for discount tier', 'success');
+                addLog(log, '✓ Bundle meets regulatory requirements', 'success');
+                await sleep(800);
+
+                addLog(log, '🚀 Activating across channels...', 'action');
+                await activateNode('node-activate2', 1);
+                await activateArrow('arrow-11', 1);
+                await sleep(400);
+
+                addLog(log, '✓ Web page updated: Bundle & Save widget displayed', 'success');
+                await sleep(400);
+
+                addLog(log, '✓ SMS queued (2 min delay): "Bundle offer ready for checkout"', 'success');
+                await sleep(400);
+
+                addLog(log, '✓ Email campaign triggered: "Complete your entertainment setup"', 'success');
+                await sleep(400);
+
+                addLog(log, '✓ In-app push notification sent', 'success');
+                await activateChannels('channels-2');
+
+                await sleep(800);
+
+                addLog(log, '✅ Cross-sell orchestration complete!', 'success');
+                addLog(log, 'Expected AOV lift: +$267 | Conversion lift: +12%', 'success');
+
+                await activateNode('node-success', 1);
+                await activateArrow('arrow-12', 1);
+
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '↻ Run Cross-Sell Demo';
+            }
+        }
+
+        // ===== SCENARIO 3: RETENTION AT RISK =====
+        async function runDemo3() {
+            const log = 'log-3';
+            document.getElementById(log).innerHTML = '';
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Running...';
+
+            try {
+                addLog(log, '⏰ Inactivity detection: Customer inactive 60+ days', 'event');
+                await activateNode('node-detect', 1);
+                await sleep(800);
+
+                addLog(log, '⚠️ High-value customer at churn risk', 'event');
+                addLog(log, '📊 Historical AOV: $8,200 | LTV: $82,000', 'data');
+                await sleep(600);
+
+                addLog(log, '📈 Risk segmentation analysis...', 'action');
+                await activateNode('node-risk', 1);
+                await activateArrow('arrow-13', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Segmented: High-Value, At-Risk, Churn-Sensitive', 'success');
+                addLog(log, '✓ Churn probability: 92% (without intervention)', 'success');
+                addLog(log, '✓ Estimated CLV if retained: $24,600 (3-year)', 'success');
+                await sleep(800);
+
+                addLog(log, '🎨 Personalization engine generating recommendations...', 'action');
+                await activateNode('node-personal', 1);
+                await activateArrow('arrow-14', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Analysis: Luxury brand preference (Louis Vuitton, Gucci)', 'success');
+                addLog(log, '✓ Price point: $800-$2,500 typical purchase', 'success');
+                addLog(log, '✓ Seasonal pattern: High Q4 spending', 'success');
+                await sleep(800);
+
+                addLog(log, '🎁 Crafting dynamic retention offer...', 'action');
+                await activateNode('node-offer3', 1);
+                await activateArrow('arrow-15', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Offer: 20% off luxury collection', 'success');
+                addLog(log, '✓ Exclusive early access: New fall collection (48hrs)', 'success');
+                addLog(log, '✓ Gift incentive: Free luxury item on $500+ purchase', 'success');
+                addLog(log, '✓ Loyalty bonus: 5x points this month', 'success');
+                await sleep(800);
+
+                addLog(log, '📅 Planning multi-channel sequence...', 'action');
+                await activateNode('node-channel', 1);
+                await activateArrow('arrow-16', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Email (T+0): Primary engagement message', 'success');
+                document.getElementById('status-email').textContent = '✓ Sent';
+                document.getElementById('status-email').className = 'status-badge success';
+                
+                await sleep(400);
+                addLog(log, '✓ CDP (T+0:15): Profile enrichment & audience qualification', 'success');
+                document.getElementById('status-cdp').textContent = '✓ Done';
+                document.getElementById('status-cdp').className = 'status-badge success';
+
+                await sleep(400);
+                addLog(log, '✓ SMS (T+2h): Follow-up reminder with urgency', 'success');
+                document.getElementById('status-sms').textContent = '✓ Queued';
+                document.getElementById('status-sms').className = 'status-badge success';
+
+                await sleep(400);
+                addLog(log, '✓ In-App (T+4h): Retargeting if user opens app', 'success');
+                document.getElementById('status-app').textContent = '✓ Active';
+                document.getElementById('status-app').className = 'status-badge success';
+
+                await sleep(400);
+                addLog(log, '✓ Loyalty (T+24h): Double-up with program bonus', 'success');
+                document.getElementById('status-loyalty').textContent = '✓ Scheduled';
+                document.getElementById('status-loyalty').className = 'status-badge success';
+
+                await sleep(800);
+
+                addLog(log, '🎯 Activating retention campaign...', 'action');
+                await activateNode('node-activate3', 1);
+                await activateArrow('arrow-17', 1);
+                await activateChannels('channels-3');
+                await sleep(800);
+
+                addLog(log, '📊 Measurement & Attribution...', 'action');
+                await activateNode('node-measure', 1);
+                await activateArrow('arrow-18', 1);
+                await sleep(600);
+
+                addLog(log, '✓ Campaign tracking: Email open rate, click rate, conversion', 'success');
+                addLog(log, '✓ Multi-touch attribution: Which channel drove re-engagement?', 'success');
+                addLog(log, '✓ CLV impact: Projected recovery +$24,600 if successful', 'success');
+                await sleep(800);
+
+                addLog(log, '🎉 Retention campaign orchestration complete!', 'success');
+                addLog(log, 'Expected re-engagement rate: 35-45% | Win-back probability: 68%', 'success');
+
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '↻ Run Retention Demo';
+            }
+        }
+
+        async function activateNode(nodeId, delay = 0) {
+            await sleep(delay * 300);
+            const node = document.getElementById(nodeId);
+            if (node) {
+                node.style.opacity = '1';
+                node.classList.add('active');
+            }
+        }
+
+        async function activateArrow(arrowId, delay = 0) {
+            await sleep(delay * 300);
+            const arrow = document.getElementById(arrowId);
+            if (arrow) {
+                arrow.style.opacity = '1';
+                arrow.classList.add('active');
+            }
+        }
+
+        async function activateChannels(channelsId) {
+            const channels = document.querySelectorAll(`#${channelsId} .channel-card`);
+            for (let i = 0; i < channels.length; i++) {
+                channels[i].classList.add('active');
+                await sleep(300);
+            }
+        }
+
+        function resetDemo1() {
+            location.reload();
+        }
+
+        function resetDemo2() {
+            location.reload();
+        }
+
+        function resetDemo3() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

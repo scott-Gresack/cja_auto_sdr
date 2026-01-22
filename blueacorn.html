@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blue Acorn - Enterprise Commerce Orchestration Platform. Unified service discovery, real-time personalization, and omnichannel activation.">
+    <title>Blue Acorn | Commerce Orchestration Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* === COLOR TOKENS === */
+        :root {
+            --color-bg-primary: #ffffff;
+            --color-bg-secondary: #f8f9fa;
+            --color-bg-tertiary: #fafafa;
+            --color-bg-surface: #f1f3f4;
+
+            --color-text-primary: #202124;
+            --color-text-secondary: #5f6368;
+            --color-text-tertiary: #9aa0a6;
+
+            --color-brand-blue: #1f73e6;
+            --color-brand-blue-dark: #1765d8;
+            --color-brand-blue-light: #e8f0fe;
+
+            --color-accent-green: #0d9488;
+            --color-accent-green-light: #d1fae5;
+
+            --color-border: #e8eaed;
+            --color-border-strong: #d0d4db;
+
+            --color-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --color-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12);
+            --color-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-family-mono: 'Roboto Mono', 'Courier New', monospace;
+
+            --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* === RESET === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--color-brand-blue);
+            outline-offset: 2px;
+        }
+
+        /* === BASE === */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            background-color: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        main {
+            display: block;
+        }
+
+        /* === HEADER === */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--color-bg-primary);
+            border-bottom: 1px solid var(--color-border);
+            padding: 1.25rem 2rem;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 1rem;
+            }
+        }
+
+        .header-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        nav a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s var(--ease-out);
+            position: relative;
+            border-radius: 4px;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--color-brand-blue);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1.25rem;
+            right: 1.25rem;
+            height: 3px;
+            background-color: var(--color-brand-blue);
+            border-radius: 2px 2px 0 0;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* === HERO === */
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 0;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--color-text-primary);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            margin: 0 auto 2.5rem;
+            max-width: 700px;
+            font-weight: 400;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.25rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* === BUTTONS === */
+        button {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-out);
+            font-family: inherit;
+            letter-spacing: 0.2px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--color-brand-blue);
+            color: #ffffff;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--color-brand-blue-dark);
+            box-shadow: var(--color-shadow-md);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-secondary);
+            color: var(--color-brand-blue);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: var(--color-bg-primary);
+            border-color: var(--color-border-strong);
+            box-shadow: var(--color-shadow-md);
+        }
+
+        /* === SECTIONS === */
+        section {
+            margin: 4rem 0;
+            padding: 3.5rem 2.5rem;
+            background-color: var(--color-bg-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            section {
+                margin: 2rem 0;
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        section h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 2rem;
+            color: var(--color-text-primary);
+            font-weight: 700;
+        }
+
+        section h3 {
+            font-size: 1.25rem;
+            margin: 1.75rem 0 1.25rem;
+            color: var(--color-brand-blue);
+            font-weight: 600;
+        }
+
+        section h4 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-brand-blue);
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--color-text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* === GRIDS === */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.75rem;
+            margin: 2rem 0;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.75rem;
+            margin: 2rem 0;
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.75rem;
+            margin: 2rem 0;
+        }
+
+        /* === CARDS === */
+        .service-card,
+        .capability-card {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.2s var(--ease-out);
+        }
+
+        .service-card:hover,
+        .capability-card:hover {
+            border-color: var(--color-border-strong);
+            background-color: var(--color-bg-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--color-shadow-lg);
+        }
+
+        .service-card h4,
+        .capability-card h4 {
+            color: var(--color-brand-blue);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .service-card p,
+        .capability-card p {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .capability-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        /* UCP Architecture */
+        .ucp-flow {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .flow-nodes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin: 2.5rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .flow-nodes {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        .flow-node {
+            width: 140px;
+            height: 140px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.85rem;
+            border: 2px solid var(--color-border);
+            background-color: var(--color-bg-primary);
+            opacity: 0.4;
+            transition: all 0.3s var(--ease-out);
+            flex-shrink: 0;
+        }
+
+        .flow-node.active {
+            opacity: 1;
+            border-color: var(--color-brand-blue);
+            background-color: var(--color-brand-blue-light);
+            box-shadow: var(--color-shadow-md), inset 0 0 1px rgba(255, 255, 255, 0.5);
+            transform: scale(1.08);
+        }
+
+        .flow-node .icon {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .flow-arrow {
+            font-size: 1.75rem;
+            color: var(--color-brand-blue);
+            opacity: 0.3;
+            transition: opacity 0.3s var(--ease-out);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        .flow-arrow.active {
+            opacity: 1;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* === DEMO SECTION === */
+        .demo-container {
+            background-color: var(--color-bg-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chat-interface,
+        .event-log {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .chat-header,
+        .event-log h4 {
+            color: var(--color-brand-blue);
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.2px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            padding: 0.875rem 1.125rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 90%;
+            line-height: 1.5;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background-color: var(--color-brand-blue-light);
+            border: 1px solid rgba(31, 115, 230, 0.2);
+            color: var(--color-brand-blue);
+            align-self: flex-end;
+        }
+
+        .message.agent {
+            background-color: var(--color-accent-green-light);
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            color: var(--color-accent-green);
+            align-self: flex-start;
+        }
+
+        .message.system {
+            background-color: var(--color-bg-surface);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-tertiary);
+            align-self: center;
+            font-size: 0.8rem;
+        }
+
+        .event-log {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 0.625rem;
+            font-size: 0.8rem;
+            font-family: var(--font-family-mono);
+            border-left: 3px solid var(--color-border);
+            padding-left: 0.875rem;
+            margin-bottom: 0.625rem;
+            color: var(--color-text-secondary);
+            transition: all 0.2s;
+        }
+
+        .log-entry:hover {
+            background-color: var(--color-bg-surface);
+            border-left-color: var(--color-brand-blue);
+        }
+
+        .log-entry.info {
+            border-left-color: var(--color-brand-blue);
+            color: var(--color-brand-blue);
+        }
+
+        .log-entry.success {
+            border-left-color: var(--color-accent-green);
+            color: var(--color-accent-green);
+        }
+
+        .log-entry.error {
+            border-left-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        /* === STATUS BADGE === */
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.pending {
+            background-color: rgba(31, 115, 230, 0.1);
+            color: var(--color-brand-blue);
+            border: 1px solid rgba(31, 115, 230, 0.2);
+        }
+
+        .status-badge.complete,
+        .status-badge.active {
+            background-color: rgba(13, 148, 136, 0.1);
+            color: var(--color-accent-green);
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        /* === PRODUCT CARD === */
+        .product-card {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin: 1.25rem 0;
+            display: flex;
+            gap: 1.75rem;
+            align-items: center;
+            box-shadow: var(--color-shadow-sm);
+            transition: all 0.2s var(--ease-out);
+        }
+
+        @media (max-width: 640px) {
+            .product-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .product-card:hover {
+            border-color: var(--color-border-strong);
+            background-color: var(--color-bg-primary);
+            box-shadow: var(--color-shadow-md);
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background-color: var(--color-brand-blue-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(31, 115, 230, 0.2);
+        }
+
+        .product-info h4 {
+            color: var(--color-brand-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .product-info p {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--color-accent-green);
+            font-weight: 700;
+            font-size: 1.35rem;
+        }
+
+        /* === OMNICHANNEL ACTIVATION === */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.75rem;
+            margin: 2rem 0;
+        }
+
+        .channel-card {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            text-align: center;
+            transition: all 0.3s var(--ease-out);
+            opacity: 0.45;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .channel-card.active {
+            opacity: 1;
+            border-color: var(--color-accent-green);
+            background-color: var(--color-accent-green-light);
+            transform: scale(1.06);
+            box-shadow: var(--color-shadow-lg);
+        }
+
+        .channel-card .icon {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .channel-card h4 {
+            color: var(--color-accent-green);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .channel-card p {
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* === UTILITIES === */
+        #blue-acorn-model,
+        #ucp-integration,
+        #capabilities,
+        #demo,
+        #workflows {
+            scroll-margin-top: 90px;
+        }
+
+        .highlight {
+            color: var(--color-accent-green);
+            font-weight: 600;
+        }
+
+        code {
+            background-color: var(--color-bg-surface);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-family: var(--font-family-mono);
+            color: var(--color-accent-green);
+            font-size: 0.9rem;
+            border: 1px solid var(--color-border);
+        }
+
+        #demo-status {
+            color: var(--color-brand-blue);
+            font-weight: 600;
+            margin-top: 1rem;
+            letter-spacing: 0.2px;
+        }
+
+        .metric-card {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            transition: all 0.2s var(--ease-out);
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .metric-card:hover {
+            border-color: var(--color-border-strong);
+            background-color: var(--color-bg-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--color-shadow-md);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-brand-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-label {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: var(--color-bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--color-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--color-border-strong);
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <div class="header-nav">
+            <a href="#" class="logo">Blue Acorn iCi</a>
+            <nav role="navigation" aria-label="Main">
+                <a href="#blue-acorn-model" class="nav-link">Services</a>
+                <a href="#ucp-integration" class="nav-link">Integration</a>
+                <a href="#capabilities" class="nav-link">Capabilities</a>
+                <a href="#demo" class="nav-link">Demo</a>
+                <a href="#workflows" class="nav-link">Use Cases</a>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Service Orchestration for Modern Commerce</h1>
+                <p>Unified discovery, real-time composition, and seamless activation of enterprise commerce services across your entire platform</p>
+                <div class="btn-group">
+                    <button class="btn-primary" id="run-demo" aria-label="Start demo">▶ Run Demo</button>
+                    <button class="btn-secondary" id="reset-demo" aria-label="Reset demo">↻ Reset</button>
+                </div>
+                <div id="demo-status" role="status" aria-live="polite"></div>
+            </section>
+
+            <!-- Blue Acorn Services -->
+            <section id="blue-acorn-model">
+                <h2>Blue Acorn iCi Services</h2>
+                <p>Enterprise-grade capabilities purpose-built for Salesforce Commerce Cloud, Adobe Experience Platform, and next-generation composable commerce stacks:</p>
+
+                <div class="services-grid">
+                    <article class="service-card">
+                        <h4>🏗️ Commerce Platform Engineering</h4>
+                        <p>Custom Salesforce Commerce Cloud, Adobe Commerce, and headless implementations with enterprise scalability, multi-tenancy, and performance optimization.</p>
+                    </article>
+                    <article class="service-card">
+                        <h4>🎯 Personalization & AI</h4>
+                        <p>ML-driven recommendations, behavioral targeting, and real-time decisioning to increase AOV, conversion, and customer lifetime value.</p>
+                    </article>
+                    <article class="service-card">
+                        <h4>📊 Data & Analytics</h4>
+                        <p>Enterprise CDPs, data warehouses, and unified customer profiles enabling single-source-of-truth insights for activation.</p>
+                    </article>
+                    <article class="service-card">
+                        <h4>🔗 Integration & Orchestration</h4>
+                        <p>API-first middleware, ERP/OMS/WMS connectors, and intelligent order routing optimizing every transaction.</p>
+                    </article>
+                    <article class="service-card">
+                        <h4>💬 Customer Experience</h4>
+                        <p>Omnichannel messaging, chat, and engagement orchestration across web, mobile, email, and voice channels.</p>
+                    </article>
+                    <article class="service-card">
+                        <h4>🛠️ Managed Services</h4>
+                        <p>24/7 platform operations, continuous optimization, and proactive governance ensuring uptime and performance.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- UCP Integration -->
+            <section id="ucp-integration">
+                <h2>Service Composition & Discovery</h2>
+                <p>Our next-generation platform enables distributed discovery of services, modular composition of capabilities, and real-time orchestration—transforming how enterprises build commerce applications:</p>
+
+                <h3>Key Advantages</h3>
+                <ul style="margin-left: 2rem; color: var(--color-text-secondary); line-height: 2;">
+                    <li><strong>Unified Discovery:</strong> AI agents and applications dynamically discover available services and negotiate capabilities</li>
+                    <li><strong>Modular Architecture:</strong> Compose commerce experiences from any combination of services without rebuilding</li>
+                    <li><strong>Real-Time Orchestration:</strong> Route requests to optimal services based on capability, capacity, and cost</li>
+                    <li><strong>Extensible Design:</strong> Add new services and integrations without system-wide changes or downtime</li>
+                    <li><strong>Developer-First APIs:</strong> REST, GraphQL, and async-first interfaces for seamless integration</li>
+                </ul>
+
+                <h3>Architecture</h3>
+                <div class="ucp-flow">
+                    <div class="flow-nodes">
+                        <div class="flow-node" id="ba-request">
+                            <div class="icon">🎯</div>
+                            <div>Request</div>
+                        </div>
+                        <div class="flow-arrow" id="arrow-1">→</div>
+
+                        <div class="flow-node" id="ba-discovery">
+                            <div class="icon">🔍</div>
+                            <div>Discovery</div>
+                        </div>
+                        <div class="flow-arrow" id="arrow-2">→</div>
+
+                        <div class="flow-node" id="ba-services">
+                            <div class="icon">⚙️</div>
+                            <div>Services</div>
+                        </div>
+                        <div class="flow-arrow" id="arrow-3">→</div>
+
+                        <div class="flow-node" id="ba-result">
+                            <div class="icon">✨</div>
+                            <div>Experience</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Capabilities -->
+            <section id="capabilities">
+                <h2>Service Capabilities</h2>
+                <p>Each Blue Acorn service exposes capabilities discoverable at runtime, enabling agile composition and orchestration:</p>
+
+                <div class="capabilities-grid">
+                    <article class="capability-card">
+                        <div class="icon">🎨</div>
+                        <h4>Product Intelligence</h4>
+                        <p>Real-time product matching, recommendations, and availability across channels and warehouses</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">💰</div>
+                        <h4>Price Optimization</h4>
+                        <p>Dynamic pricing, promotions, and offer eligibility based on demand signals and customer segment</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">👤</div>
+                        <h4>Customer Context</h4>
+                        <p>360° customer view including behavior, preferences, segment, and lifetime value in real time</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">🚚</div>
+                        <h4>Fulfillment Routing</h4>
+                        <p>Intelligent location selection optimizing for cost, speed, and inventory health</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">💳</div>
+                        <h4>Payment Services</h4>
+                        <p>Multi-provider payment processing with fraud detection and financing eligibility</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">📧</div>
+                        <h4>Message Orchestration</h4>
+                        <p>Contextual, personalized messages for email, SMS, push, and in-app channels</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">🔐</div>
+                        <h4>Compliance & Consent</h4>
+                        <p>GDPR, CCPA, and industry-specific data governance enforcement at every interaction</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+
+                    <article class="capability-card">
+                        <div class="icon">📊</div>
+                        <h4>Analytics & Attribution</h4>
+                        <p>Real-time event tracking and multi-touch attribution across all touchpoints</p>
+                        <span class="status-badge active">Available</span>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Live Demo -->
+            <section id="demo">
+                <h2>Live Demo</h2>
+                <p>Watch how services compose to deliver a personalized B2B experience:</p>
+
+                <div class="demo-container">
+                    <div class="demo-grid">
+                        <div>
+                            <div class="chat-interface">
+                                <div class="chat-header">🤖 Agent Interaction</div>
+                                <div class="chat-messages" id="chat-messages">
+                                    <div class="message system">Initializing demo...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="event-log">
+                                <h4>📋 Service Activity Log</h4>
+                                <div id="log-entries" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <article id="product-recommendation" style="display: none; margin-top: 2rem;">
+                        <h3>Recommended Product Bundle</h3>
+                        <div class="product-card">
+                            <div class="product-image">🏭</div>
+                            <div class="product-info">
+                                <h4>Industrial Supply Bundle</h4>
+                                <p>Premium bulk order package with logistics optimization</p>
+                                <p style="font-size: 0.85rem;">SKU: ISB-2024-001 | Available: 500+ units</p>
+                                <div class="product-price">$4,250 USD</div>
+                                <span class="status-badge complete">✓ In Stock</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <h3>Activation & Engagement</h3>
+                <div class="channels-grid">
+                    <article class="channel-card" id="email-channel">
+                        <div class="icon">📧</div>
+                        <h4>Email</h4>
+                        <p>Personalized campaign with volume pricing and next-business-day delivery option</p>
+                    </article>
+                    <article class="channel-card" id="sms-channel">
+                        <div class="icon">💬</div>
+                        <h4>SMS</h4>
+                        <p>Quick-win notification with order status and fulfillment timeline</p>
+                    </article>
+                    <article class="channel-card" id="web-channel">
+                        <div class="icon">🌐</div>
+                        <h4>Web Portal</h4>
+                        <p>Contextual recommendations and dynamic pricing based on browsing behavior</p>
+                    </article>
+                    <article class="channel-card" id="api-channel">
+                        <div class="icon">🔗</div>
+                        <h4>B2B API</h4>
+                        <p>Real-time order feeds and fulfillment webhooks to customer ERP systems</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Use Cases -->
+            <section id="workflows">
+                <h2>Common Use Cases</h2>
+
+                <h3>Scenario 1: Dynamic B2B Ordering</h3>
+                <div style="background-color: var(--color-bg-secondary); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="margin-bottom: 1rem;"><strong>Customer:</strong> Enterprise procurement team needing inventory replenishment with custom terms.</p>
+                    <ol style="margin-left: 2rem; color: var(--color-text-secondary); line-height: 2;">
+                        <li>Discovery: Agent locates pricing, inventory, fulfillment services</li>
+                        <li>Context: Pulls customer segment (Enterprise), LTV, and historical preferences</li>
+                        <li>Composition: Assembles customized offer with volume discount, payment terms, delivery windows</li>
+                        <li>Orchestration: Routes through approval workflow, sends to ERP, activates notifications</li>
+                        <li>Attribution: Tracks engagement and conversion touchpoints end-to-end</li>
+                    </ol>
+                </div>
+
+                <h3>Scenario 2: Real-Time Cross-Sell</h3>
+                <div style="background-color: var(--color-bg-secondary); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="margin-bottom: 1rem;"><strong>Trigger:</strong> Customer adds high-margin item to cart.</p>
+                    <ol style="margin-left: 2rem; color: var(--color-text-secondary); line-height: 2;">
+                        <li>Recommendation Engine: Identifies complementary products with 82% co-purchase correlation</li>
+                        <li>Inventory Check: Validates availability at preferred fulfillment location</li>
+                        <li>Offer Engine: Calculates optimal discount to maximize basket size</li>
+                        <li>Compliance: Verifies promotion eligibility and budget limits</li>
+                        <li>Activation: Shows suggestion on web, SMS follow-up, email campaign queued</li>
+                    </ol>
+                </div>
+
+                <h3>Scenario 3: Retention at Risk</h3>
+                <div style="background-color: var(--color-bg-secondary); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="margin-bottom: 1rem;"><strong>Condition:</strong> Customer inactive for 60+ days despite high historical AOV.</p>
+                    <ol style="margin-left: 2rem; color: var(--color-text-secondary); line-height: 2;">
+                        <li>Segmentation: Flagged as high-value, at-risk, retention-sensitive</li>
+                        <li>Personalization: Generates product recommendations based on purchase history</li>
+                        <li>Offer Strategy: Dynamic retention offer (special discount or loyalty bonus)</li>
+                        <li>Channel Selection: Email primary, SMS secondary, in-app tertiary</li>
+                        <li>Measurement: Tracks re-engagement rate and lift attribution</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Summary -->
+            <section>
+                <h2>Why Service Orchestration Matters</h2>
+                <div class="channels-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">3-5x</div>
+                        <div class="metric-label">Faster New Service Deployment</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">&lt;200ms</div>
+                        <div class="metric-label">End-to-End Latency</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">99.95%</div>
+                        <div class="metric-label">Platform Availability</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">∞</div>
+                        <div class="metric-label">Service Combinations</div>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2rem; color: var(--color-text-secondary);">
+                    Blue Acorn iCi's service orchestration platform transforms commerce from a monolithic, tightly-coupled system into a <span class="highlight">composable, evolvable ecosystem</span>. Enterprises gain agility, time-to-value, and resilience—enabling innovation without rewrites.
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Navigation highlighting
+        function updateActiveNavLink() {
+            const sections = ['blue-acorn-model', 'ucp-integration', 'capabilities', 'demo', 'workflows'];
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                for (let section of sections) {
+                    const el = document.getElementById(section);
+                    if (el && el.offsetTop <= window.scrollY + 100) {
+                        current = section;
+                    }
+                }
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Event logging
+        function addLog(message, type = 'info') {
+            const logEntries = document.getElementById('log-entries');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEntries.appendChild(entry);
+            logEntries.parentElement.scrollTop = logEntries.parentElement.scrollHeight;
+        }
+
+        // Chat messaging
+        function addChatMessage(text, type = 'system') {
+            const chatMessages = document.getElementById('chat-messages');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            chatMessages.appendChild(message);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Helper functions
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function setOpacity(ids, opacity) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.opacity = opacity;
+            });
+        }
+
+        async function fadeIn(id, delay = 0) {
+            await sleep(delay);
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('active');
+            }
+        }
+
+        function activateChannel(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('active');
+            }
+        }
+
+        // Main Demo Sequence
+        let demoRunning = false;
+
+        async function runDemoSequence() {
+            if (demoRunning) return;
+            demoRunning = true;
+
+            const runBtn = document.getElementById('run-demo');
+            const resetBtn = document.getElementById('reset-demo');
+            const statusText = document.getElementById('demo-status');
+
+            if (runBtn) {
+                runBtn.disabled = true;
+                runBtn.textContent = '⏸ Running...';
+            }
+
+            // Clear logs and chat
+            document.getElementById('log-entries').innerHTML = '';
+            document.getElementById('chat-messages').innerHTML = '';
+
+            // Reset UI
+            setOpacity(['ba-request', 'ba-discovery', 'ba-services', 'ba-result', 'arrow-1', 'arrow-2', 'arrow-3'], 0.35);
+            ['email-channel', 'sms-channel', 'web-channel', 'api-channel'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('active');
+                    el.style.opacity = '0.35';
+                }
+            });
+            document.getElementById('product-recommendation').style.display = 'none';
+
+            await sleep(500);
+
+            // Step 1: Customer Request
+            addChatMessage('Hi, I need to replenish our industrial supply inventory. What do you recommend?', 'user');
+            addLog('Customer query received: "replenish industrial supply inventory"', 'info');
+            await fadeIn('ba-request', 0);
+            await sleep(1000);
+
+            // Step 2: UCP Discovery
+            addLog('🔍 Discovering Blue Acorn capabilities via UCP...', 'info');
+            await fadeIn('ba-discovery', 300);
+            await sleep(800);
+
+            addLog('✓ Found: Product Recommendations (v2.1)', 'success');
+            await sleep(300);
+            addLog('✓ Found: Customer Segmentation (v1.8)', 'success');
+            await sleep(300);
+            addLog('✓ Found: Inventory Routing (v3.0)', 'success');
+            await sleep(300);
+            addLog('✓ Found: Dynamic Pricing (v2.5)', 'success');
+            await sleep(1000);
+
+            // Step 3: Service Orchestration
+            addChatMessage('Analyzing your account and inventory...', 'agent');
+            addLog('⚙️ Calling Customer Segmentation service...', 'info');
+            await fadeIn('ba-services', 300);
+            await sleep(800);
+
+            addLog('✓ Customer flagged as: Key Account (LTV: $450K)', 'success');
+            await sleep(600);
+
+            addLog('⚙️ Calling Product Recommendation engine...', 'info');
+            await sleep(800);
+            addLog('✓ Generated 5 recommendations with 87% confidence scores', 'success');
+            await sleep(600);
+
+            addLog('⚙️ Running Inventory Routing optimization...', 'info');
+            await sleep(800);
+            addLog('✓ Identified Dallas Distribution Center (fastest 2-day shipping)', 'success');
+            await sleep(600);
+
+            addLog('⚙️ Applying Dynamic Pricing logic...', 'info');
+            await sleep(800);
+            addLog('✓ Volume discount (15% for 500+ units) applied → $4,250 total', 'success');
+            await sleep(600);
+
+            addLog('⚙️ Validating compliance and payment eligibility...', 'info');
+            await sleep(800);
+            addLog('✓ Payment plan eligible (net-30 terms)', 'success');
+            await sleep(1000);
+
+            // Step 4: Result
+            addChatMessage('✨ Found perfect match: Industrial Supply Bundle. 15% discount applied. In stock in Dallas.', 'agent');
+            addLog('✨ UCP orchestration complete', 'success');
+            await fadeIn('ba-result', 300);
+            document.getElementById('product-recommendation').style.display = 'block';
+            await sleep(1000);
+
+            // Step 5: Omnichannel Activation
+            addLog('📢 Activating omnichannel messaging...', 'info');
+            await sleep(500);
+
+            addLog('📧 Email campaign triggered', 'success');
+            activateChannel('email-channel');
+            await sleep(600);
+
+            addLog('💬 SMS notification queued', 'success');
+            activateChannel('sms-channel');
+            await sleep(600);
+
+            addLog('🌐 Web portal personalization activated', 'success');
+            activateChannel('web-channel');
+            await sleep(600);
+
+            addLog('🔗 B2B API webhook sent to customer ERP system', 'success');
+            activateChannel('api-channel');
+            await sleep(1000);
+
+            addLog('✅ Omnichannel activation complete', 'success');
+            addChatMessage('Your personalized order is ready across all channels. Check email, SMS, web, or your ERP system.', 'agent');
+
+            if (statusText) statusText.textContent = '✓ Demo Complete';
+
+            if (runBtn) {
+                runBtn.disabled = false;
+                runBtn.textContent = '↻ Run Again';
+            }
+
+            demoRunning = false;
+        }
+
+        // Event Listeners
+        document.getElementById('run-demo').addEventListener('click', runDemoSequence);
+        document.getElementById('reset-demo').addEventListener('click', () => {
+            location.reload();
+        });
+
+        // Initialize
+        updateActiveNavLink();
+
+        // Auto-run demo after 1 second
+        setTimeout(runDemoSequence, 1000);
+    </script>
+</body>
+</html>
