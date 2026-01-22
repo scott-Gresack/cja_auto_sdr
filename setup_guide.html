@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup & Deployment Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ED1C24;
+            --secondary: #1473E6;
+            --dark: #101010;
+            --success: #12B372;
+            --warning: #FDB913;
+            --error: #FA4545;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%);
+            color: #fff;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--warning);
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 16px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            font-size: 24px;
+            color: var(--warning);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--secondary);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .step h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .step p {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            color: #0f0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: rgba(18, 179, 114, 0.2);
+            color: var(--success);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .warning-badge {
+            display: inline-block;
+            background: rgba(253, 185, 19, 0.2);
+            color: var(--warning);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 2px solid var(--primary);
+            border-radius: 2px;
+            color: #ddd;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .checklist li.completed:before {
+            content: "✓ ";
+            color: var(--success);
+        }
+
+        .info-box {
+            background: rgba(20, 115, 230, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: rgba(253, 185, 19, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: rgba(18, 179, 114, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-item h4 {
+            color: var(--warning);
+            margin-bottom: 15px;
+        }
+
+        .comparison-item ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comparison-item li {
+            padding: 5px 0;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .comparison-item li:before {
+            content: "• ";
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, rgba(237, 28, 36, 0.1) 0%, rgba(20, 115, 230, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+
+        .next-steps h2 {
+            color: var(--warning);
+            margin-bottom: 20px;
+        }
+
+        .resource-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .resource-link {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            color: var(--secondary);
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .resource-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--secondary);
+        }
+
+        .resource-link strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--warning);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #666;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Complete Setup & Deployment Guide</h1>
+            <p class="subtitle">Get both AEP Health Viewer and CJA SDR Generator running locally</p>
+        </header>
+
+        <!-- Prerequisites -->
+        <div class="section">
+            <h2>📋 Prerequisites</h2>
+            
+            <div class="info-box">
+                <strong>ℹ️ You Already Have:</strong>
+                <ul style="list-style: none; padding: 10px 0; margin: 10px 0;">
+                    <li>✓ SSH keys configured for GitHub</li>
+                    <li>✓ Both repositories cloned locally</li>
+                    <li>✓ Git configured with your GitHub credentials</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>What You Still Need</h3>
+                <ul class="checklist">
+                    <li>Node.js 18+ (for AEP Health Viewer)</li>
+                    <li>Python 3.11+ (for CJA SDR Generator)</li>
+                    <li>Adobe API credentials (org ID, API key, access token)</li>
+                    <li>Adobe CJA credentials (company ID, API token)</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> You mentioned <code>brew</code> and <code>npm</code> are not found in your PATH. We need to install Node.js first. 
+            </div>
+        </div>
+
+        <!-- Node.js Installation -->
+        <div class="section">
+            <h2>🟢 Step 1: Install Node.js</h2>
+
+            <div class="step">
+                <h3>Option A: Using Homebrew (Recommended)</h3>
+                <p>First, install Homebrew if not already installed:</p>
+                <div class="code-block">
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                </div>
+                <p>Then install Node.js:</p>
+                <div class="code-block">
+brew install node@18
+                </div>
+                <p>Verify installation:</p>
+                <div class="code-block">
+node --version
+npm --version
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Option B: Direct Download</h3>
+                <p>Download from <a href="https://nodejs.org" style="color: var(--secondary); text-decoration: underline;">nodejs.org</a> (LTS version 18 or later) and follow the installer.</p>
+            </div>
+        </div>
+
+        <!-- Python Installation -->
+        <div class="section">
+            <h2>🔵 Step 2: Install Python</h2>
+
+            <div class="step">
+                <h3>Option A: Using Homebrew</h3>
+                <div class="code-block">
+brew install python@3.11
+                </div>
+                <p>Verify installation:</p>
+                <div class="code-block">
+python3 --version
+pip3 --version
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Option B: Using pyenv (Version Management)</h3>
+                <div class="code-block">
+brew install pyenv
+pyenv install 3.11.0
+pyenv global 3.11.0
+                </div>
+            </div>
+        </div>
+
+        <!-- AEP Health Viewer Setup -->
+        <div class="section">
+            <h2>📊 Step 3: Setup AEP Health Viewer</h2>
+
+            <div class="step">
+                <h3>Navigate to Project</h3>
+                <div class="code-block">
+cd /Users/gresack/ai_mar/aephealthviewer-open
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Install Dependencies</h3>
+                <div class="code-block">
+npm install
+                </div>
+                <p style="margin-top: 10px; color: #999; font-size: 13px;">This downloads ~500+ packages. May take 2-5 minutes.</p>
+            </div>
+
+            <div class="step">
+                <h3>Configure Environment Variables</h3>
+                <p>Create a <code>.env.local</code> file in the project root:</p>
+                <div class="code-block">
+# Create the file
+touch .env.local
+
+# Edit and add your credentials
+AEP_ORG_ID=your-org-id@AdobeOrg
+AEP_API_KEY=your-api-key
+AEP_ACCESS_TOKEN=your-bearer-token
+AEP_INSTANCE_ID=your-instance-id
+                </div>
+                <div class="info-box">
+                    <strong>ℹ️ Where to get credentials:</strong>
+                    <ul style="list-style: none; padding: 10px 0; margin: 10px 0;">
+                        <li>• Adobe Developer Console: <code>console.adobe.io</code></li>
+                        <li>• Create a Service Account project</li>
+                        <li>• Generate OAuth credentials</li>
+                        <li>• Add Product Profiles for AEP access</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Run Development Server</h3>
+                <div class="code-block">
+npm run dev
+                </div>
+                <p style="margin-top: 10px; color: var(--success);">✓ Server starts on http://localhost:3000</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✓ Complete!</strong> AEP Health Viewer is now running. Open http://localhost:3000 in your browser.
+            </div>
+        </div>
+
+        <!-- CJA SDR Generator Setup -->
+        <div class="section">
+            <h2>📈 Step 4: Setup CJA SDR Generator</h3>
+
+            <div class="step">
+                <h3>Navigate to Project</h3>
+                <div class="code-block">
+cd /Users/gresack/ai_mar/cja_auto_sdr_original
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Create Virtual Environment</h3>
+                <div class="code-block">
+python3 -m venv venv
+source venv/bin/activate
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Install Dependencies</h3>
+                <div class="code-block">
+pip install -r requirements.txt
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Configure API Credentials</h3>
+                <p>Create a <code>config.json</code> file (see config.json.example):</p>
+                <div class="code-block">
+{
+  "acp": {
+    "org_id": "your-org-id@AdobeOrg",
+    "tech_account_id": "your-tech-account-id",
+    "api_key": "your-api-key",
+    "secret": "your-secret",
+    "ims_host": "https://ims-na1.adobelogin.com"
+  },
+  "cja": {
+    "company_id": "your-company-id",
+    "api_token": "your-api-token"
+  }
+}
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Test the CLI</h3>
+                <div class="code-block">
+python cja_sdr_generator.py --help
+                </div>
+                <p style="margin-top: 10px;">This shows all available commands and options.</p>
+            </div>
+
+            <div class="step">
+                <h3>Generate Your First SDR</h3>
+                <div class="code-block">
+python cja_sdr_generator.py --data-view-id YOUR_DATA_VIEW_ID --output results.xlsx
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✓ Complete!</strong> CJA SDR Generator is ready. Run it whenever you need to document your data views.
+            </div>
+        </div>
+
+        <!-- Verification -->
+        <div class="section">
+            <h2>✅ Step 5: Verify Everything Works</h2>
+
+            <ul class="checklist">
+                <li class="completed">Node.js installed (node --version)</li>
+                <li class="completed">Python installed (python3 --version)</li>
+                <li>npm packages installed (aephealthviewer-open)</li>
+                <li>AEP Health Viewer running (http://localhost:3000)</li>
+                <li>Python venv activated (cja_auto_sdr_original)</li>
+                <li>CJA SDR Generator accessible (python cja_sdr_generator.py --help)</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>All systems ready?</strong> You now have a complete Adobe tech stack running locally!
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="section">
+            <h2>🔧 Troubleshooting</h2>
+
+            <div class="step">
+                <h3>Problem: "npm: command not found"</h3>
+                <p>Node.js might not be in your PATH. Try:</p>
+                <div class="code-block">
+# Find where Node is installed
+which node
+
+# Or reinstall
+brew uninstall node
+brew install node@18
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Problem: "ModuleNotFoundError" in Python</h3>
+                <p>Ensure your virtual environment is activated:</p>
+                <div class="code-block">
+cd /Users/gresack/ai_mar/cja_auto_sdr_original
+source venv/bin/activate
+pip install -r requirements.txt
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Problem: API Authentication Fails</h3>
+                <p>Check your credentials are correctly set in environment variables. For Next.js:</p>
+                <div class="code-block">
+cat .env.local  # Verify contents
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Problem: Port 3000 Already in Use</h3>
+                <p>Run on a different port:</p>
+                <div class="code-block">
+npm run dev -- -p 3001
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h2>🎯 Next Steps</h2>
+
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>AEP Health Viewer</h4>
+                    <ul>
+                        <li>Customize dashboard components</li>
+                        <li>Add more monitoring metrics</li>
+                        <li>Configure alerting rules</li>
+                        <li>Deploy to production</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-item">
+                    <h4>CJA SDR Generator</h4>
+                    <ul>
+                        <li>Run for each data view</li>
+                        <li>Set up scheduled generation</li>
+                        <li>Customize report templates</li>
+                        <li>Integrate with CI/CD</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: var(--warning); margin: 30px 0 20px 0;">📚 Documentation & Resources</h3>
+
+            <div class="resource-links">
+                <a href="https://github.com/composablestack/aephealthviewer-open" class="resource-link" target="_blank">
+                    <strong>AEP Health Viewer</strong>
+                    Repository with full documentation
+                </a>
+                <a href="https://github.com/brian-a-au/cja_auto_sdr" class="resource-link" target="_blank">
+                    <strong>CJA SDR Generator</strong>
+                    Complete Python CLI documentation
+                </a>
+                <a href="https://developer.adobe.com" class="resource-link" target="_blank">
+                    <strong>Adobe Developer Console</strong>
+                    API credentials and documentation
+                </a>
+                <a href="https://nodejs.org/docs" class="resource-link" target="_blank">
+                    <strong>Node.js Documentation</strong>
+                    JavaScript runtime reference
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Setup & Deployment Guide | Adobe Tech Stack</p>
+            <p style="margin-top: 10px; color: #555;">Last updated: January 22, 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Interactive checklist
+        document.querySelectorAll('.checklist li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('completed');
+            });
+        });
+    </script>
+</body>
+</html>
