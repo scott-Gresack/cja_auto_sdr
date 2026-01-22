@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEP Health Viewer - API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --primary-dark: #0f0f1e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-light: #ff6b7a;
+            --success: #00d4aa;
+            --warning: #ff9f43;
+            --danger: #ff5757;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1a6;
+            --border: #2a2a3e;
+            --bg-highlight: #1f1f35;
+            --code-bg: #0d0d1a;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(90deg, rgba(26,26,46,0.95) 0%, rgba(22,33,62,0.95) 100%);
+            border-bottom: 2px solid var(--accent);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ===== SIDEBAR & LAYOUT ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: var(--bg-highlight);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            padding-left: 0.75rem;
+        }
+
+        .sidebar-link:hover {
+            color: var(--accent);
+            background: rgba(233, 69, 96, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .sidebar-link.active {
+            color: var(--accent);
+            background: rgba(233, 69, 96, 0.15);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section {
+            background: var(--bg-highlight);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ===== API ENDPOINTS ===== */
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .endpoint-card {
+            background: linear-gradient(135deg, rgba(22,33,62,0.5) 0%, rgba(26,26,46,0.5) 100%);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(233, 69, 96, 0.15);
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .endpoint-method.get { background: rgba(0, 212, 170, 0.15); color: var(--success); }
+        .endpoint-method.post { background: rgba(255, 159, 67, 0.15); color: var(--warning); }
+        .endpoint-method.put { background: rgba(100, 150, 255, 0.15); color: #6496ff; }
+        .endpoint-method.delete { background: rgba(255, 87, 87, 0.15); color: var(--danger); }
+
+        .endpoint-path {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            word-break: break-all;
+        }
+
+        .endpoint-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        /* ===== CODE BLOCKS ===== */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .code-label {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== TABLE STYLES ===== */
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 13px;
+        }
+
+        .api-table th {
+            background: rgba(233, 69, 96, 0.1);
+            color: var(--accent);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .api-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .api-table tr:hover {
+            background: rgba(233, 69, 96, 0.05);
+        }
+
+        .param-name {
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== FEATURE HIGHLIGHTS ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(233, 69, 96, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== METRICS SECTION ===== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric {
+            background: linear-gradient(135deg, rgba(22,33,62,0.8) 0%, rgba(26,26,46,0.8) 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--primary-dark);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                sticky: none;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            nav {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+
+            nav a {
+                display: block;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .endpoint-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-light);
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(233, 69, 96, 0.15);
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge.required {
+            background: rgba(255, 87, 87, 0.15);
+            color: var(--danger);
+        }
+
+        .badge.optional {
+            background: rgba(255, 159, 67, 0.15);
+            color: var(--warning);
+        }
+
+        /* ===== HIGHLIGHT BOX ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(0, 212, 170, 0.05) 100%);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+        }
+
+        .highlight-box-content {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">◈</div>
+                <div class="logo-text">
+                    <h1>AEP Health Viewer</h1>
+                    <p>API Reference & Documentation</p>
+                </div>
+            </a>
+            <nav>
+                <a href="#overview">Overview</a>
+                <a href="#endpoints">Endpoints</a>
+                <a href="#authentication">Auth</a>
+                <a href="#schemas">Schemas</a>
+                <a href="#examples">Examples</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTAINER ===== -->
+    <div class="container">
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Services</div>
+                <a href="#batch-api" class="sidebar-link active">Batch Ingestion</a>
+                <a href="#destinations-api" class="sidebar-link">Destinations</a>
+                <a href="#ingestion-api" class="sidebar-link">Ingestion Data</a>
+                <a href="#query-service-api" class="sidebar-link">Query Service</a>
+                <a href="#segmentation-api" class="sidebar-link">Segmentation</a>
+                <a href="#sources-api" class="sidebar-link">Sources</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Utilities</div>
+                <a href="#auth-api" class="sidebar-link">Token Generation</a>
+                <a href="#health-check-api" class="sidebar-link">Health Checks</a>
+                <a href="#oauth-api" class="sidebar-link">OAuth Validation</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Data Management</div>
+                <a href="#database-schema" class="sidebar-link">Database Schema</a>
+                <a href="#configuration" class="sidebar-link">Configuration</a>
+                <a href="#storage" class="sidebar-link">Local Storage</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">UI Components</div>
+                <a href="#components" class="sidebar-link">Component Library</a>
+                <a href="#theming" class="sidebar-link">Theming System</a>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="main">
+            <!-- ===== OVERVIEW SECTION ===== -->
+            <section id="overview" class="section">
+                <h2 class="section-title">📊 API Overview</h2>
+                <p class="section-subtitle">
+                    Comprehensive API documentation for the AEP Health Viewer. This platform provides real-time monitoring and operational insights into Adobe Experience Platform (AEP) environments through direct API access.
+                </p>
+
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-value">15+</div>
+                        <div class="metric-label">API Endpoints</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">6</div>
+                        <div class="metric-label">Core Services</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">TypeScript</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">OAuth 2.0</div>
+                        <div class="metric-label">Security Standard</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">🔐 Security Architecture</div>
+                    <div class="highlight-box-content">
+                        All API interactions use OAuth 2.0 client credentials flow with automatic token refresh. Sensitive configurations are stored client-side in IndexedDB and never exposed in requests. Server-side validation ensures proper authentication and authorization.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== BATCH INGESTION API ===== -->
+            <section id="batch-api" class="section">
+                <h2 class="section-title">Batch Ingestion API</h2>
+                <p class="section-subtitle">Monitor and retrieve batch processing data from Adobe Experience Platform.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/batches</div>
+                        <div class="endpoint-description">Retrieve a list of AEP batches with optional filtering and pagination.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge">datasetId</span>
+                            <span class="badge optional">optional</span>
+                            <span class="badge optional">limit</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/batches/[id]</div>
+                        <div class="endpoint-description">Retrieve a specific AEP batch by its unique identifier.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/batches/related</div>
+                        <div class="endpoint-description">Find related batches for a given batch ID to understand data lineage.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">batchId (required)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">datasetId</span></td>
+                            <td>String</td>
+                            <td>Filter batches by dataset ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td>Integer</td>
+                            <td>Maximum number of results (default: 50)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">batchId</span></td>
+                            <td>String</td>
+                            <td>Batch ID for finding related batches</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <span class="code-label">Example Request</span>
+                    <code>curl -X GET "https://api.adobe.io/data/foundation/catalog/batches?datasetId=DATASET_ID&limit=25" \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "x-aep-config: BASE64_ENCODED_CONFIG"</code>
+                </div>
+            </section>
+
+            <!-- ===== DESTINATIONS API ===== -->
+            <section id="destinations-api" class="section">
+                <h2 class="section-title">Destinations API</h2>
+                <p class="section-subtitle">Manage and monitor destination configurations, dataflows, and activation histories.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/destinations</div>
+                        <div class="endpoint-description">Retrieve destination data by type (connections, flows, specs, flow-runs).</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge">type</span>
+                            <span class="badge optional">connectionSpecId</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/destinations/[id]</div>
+                        <div class="endpoint-description">Get specific destination resource by ID and type.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                            <span class="badge">type (required)</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/destinations/flows/[id]</div>
+                        <div class="endpoint-description">Retrieve detailed flow information or execution runs.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                            <span class="badge optional">type</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">💡 Destination Monitoring Features</div>
+                    <div class="highlight-box-content">
+                        Track connection specifications, configured destinations, dataflows with schedules, and complete execution histories. Monitor data activation pipelines and identify issues in real-time.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SEGMENTATION API ===== -->
+            <section id="segmentation-api" class="section">
+                <h2 class="section-title">Segmentation API</h2>
+                <p class="section-subtitle">Monitor segments, segment definitions, jobs, and schedules across AEP.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/segmentation/schedules</div>
+                        <div class="endpoint-description">Retrieve all segment evaluation schedules.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge optional">limit</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/segmentation/segment-definitions</div>
+                        <div class="endpoint-description">List all segment definitions with their properties.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge optional">limit</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/segmentation/segment-jobs</div>
+                        <div class="endpoint-description">Monitor active and completed segment evaluation jobs.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge optional">limit</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/segment-details/[id]/jobs</div>
+                        <div class="endpoint-description">Get specific segment job details by segment ID.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Purpose</th>
+                            <th>Response Format</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">/segment-details/export-schedules</span></td>
+                            <td>AEP export schedule data</td>
+                            <td>JSON Array</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">/segment-details/profile-export-jobs</span></td>
+                            <td>Profile export job information</td>
+                            <td>JSON Array</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">/segment-jobs/[id]</span></td>
+                            <td>Specific job or definition by ID</td>
+                            <td>JSON Object</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ===== QUERY SERVICE API ===== -->
+            <section id="query-service-api" class="section">
+                <h2 class="section-title">Query Service API</h2>
+                <p class="section-subtitle">Access and monitor Query Service flows and scheduled queries.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/query-service</div>
+                        <div class="endpoint-description">Retrieve paginated list of Query Service flows.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge optional">limit</span>
+                            <span class="badge optional">offset</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/query-service/[id]</div>
+                        <div class="endpoint-description">Get detailed flow information including execution runs.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-label">Pagination Example</span>
+                    <code>GET /api/query-service?limit=20&offset=0
+GET /api/query-service?limit=20&offset=20
+
+Response includes flow metadata and associated run history.</code>
+                </div>
+            </section>
+
+            <!-- ===== INGESTION API ===== -->
+            <section id="ingestion-api" class="section">
+                <h2 class="section-title">Ingestion Data API</h2>
+                <p class="section-subtitle">Monitor datasets, flow runs, and ingestion pipeline status.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/ingestion/datasets</div>
+                        <div class="endpoint-description">List available AEP datasets.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge optional">limit</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/ingestion/flow-runs</div>
+                        <div class="endpoint-description">Retrieve AEP data flow run information and execution history.</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/ingestion/flows</div>
+                        <div class="endpoint-description">Get all configured AEP data flows.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SOURCES API ===== -->
+            <section id="sources-api" class="section">
+                <h2 class="section-title">Sources API</h2>
+                <p class="section-subtitle">Manage and monitor data source connections and flows.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/sources</div>
+                        <div class="endpoint-description">Retrieve source connections or flows (specify type parameter).</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge">type</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/sources/[id]</div>
+                        <div class="endpoint-description">Get specific source entity by ID and type.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">id (required)</span>
+                            <span class="badge">type (required)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== AUTHENTICATION ===== -->
+            <section id="authentication" class="section">
+                <h2 class="section-title">🔐 Authentication & Security</h2>
+                <p class="section-subtitle">Token generation, validation, and secure credential management.</p>
+
+                <div class="endpoint-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method post">POST</div>
+                        <div class="endpoint-path">/api/generate-token</div>
+                        <div class="endpoint-description">Generate Adobe IMS access token using client credentials.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">clientId</span>
+                            <span class="badge required">clientSecret</span>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/health-check</div>
+                        <div class="endpoint-description">Verify AEP connectivity and configuration health.</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/test-connection</div>
+                        <div class="endpoint-description">Test AEP connection with sample API request.</div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-method post">POST</div>
+                        <div class="endpoint-path">/api/oauth/aep-token</div>
+                        <div class="endpoint-description">Validate AEP OAuth access token without storage.</div>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge required">token</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">✅ Best Practices</div>
+                    <div class="highlight-box-content">
+                        <ul style="margin: 0; padding-left: 1.5rem;">
+                            <li>Store credentials in environment variables, never in code</li>
+                            <li>Use OAuth 2.0 client credentials flow for server-to-server authentication</li>
+                            <li>Tokens automatically refresh before expiration</li>
+                            <li>All requests include x-aep-config header with Base64-encoded configuration</li>
+                            <li>Sensitive tokens validated server-side, never stored client-side</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== DATABASE SCHEMA ===== -->
+            <section id="database-schema" class="section">
+                <h2 class="section-title">📦 Database Schema</h2>
+                <p class="section-subtitle">Backend data structure for events, lineage, and configurations.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">AEP Events Table</div>
+                        <div class="feature-description">
+                            Stores webhook events with JSONB payload, event type, source system, timestamp, and lineage status. Indexed for fast queries.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <div class="feature-title">Lineage Assignments</div>
+                        <div class="feature-description">
+                            Records manual data flow assignments linking upstream and downstream systems. Enables data traceability across platforms.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <div class="feature-title">Use Cases Configuration</div>
+                        <div class="feature-description">
+                            Manages MCP service configurations and use case definitions with flexible JSONB storage for evolving requirements.
+                        </div>
+                    </div>
+                </div>
+
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Key Columns</th>
+                            <th>Indexes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">aep_events</span></td>
+                            <td>event_id, event_type, source_system, timestamp, significance</td>
+                            <td>event_type, timestamp, source_system, significance, lineage_assigned</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">lineage_assignments</span></td>
+                            <td>event_id, upstream_system, downstream_system, data_flow_description</td>
+                            <td>event_id, upstream_system, downstream_system</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">use_cases</span></td>
+                            <td>name, configuration, lineage, functions_used, status</td>
+                            <td>name, status, created_at, functions_used (GIN)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ===== CONFIGURATION ===== -->
+            <section id="configuration" class="section">
+                <h2 class="section-title">⚙️ Configuration Management</h2>
+                <p class="section-subtitle">Client-side and server-side configuration handling.</p>
+
+                <div class="code-block">
+                    <span class="code-label">AEP Configuration Interface</span>
+                    <code>interface AEPConfig {
+  clientId: string;
+  clientSecret: string;
+  orgId: string;
+  sandbox: string;
+  sandboxId: string;
+  authToken?: string;
+  isActive: boolean;
+}</code>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💾</div>
+                        <div class="feature-title">IndexedDB Storage</div>
+                        <div class="feature-description">
+                            Store multiple AEP configurations locally in browser. Only one configuration marked as active at a time for API requests.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📤</div>
+                        <div class="feature-title">Config Injection</div>
+                        <div class="feature-description">
+                            Automatically encodes active configuration as Base64 and injects x-aep-config header into all API requests.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <div class="feature-title">Server-Side Extraction</div>
+                        <div class="feature-description">
+                            Server extracts and decodes x-aep-config header to reconstruct AEPConfig for authenticated API calls.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">🛡️ Configuration Security</div>
+                    <div class="highlight-box-content">
+                        Client-side: Credentials stored in IndexedDB, never exposed in URL or plain text. Server-side: Configuration extracted from headers for each request, validated and used immediately. Tokens automatically refresh before expiration.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== COMPONENTS ===== -->
+            <section id="components" class="section">
+                <h2 class="section-title">🎨 Component Library</h2>
+                <p class="section-subtitle">Core React components for AEP monitoring dashboard.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-title">Configuration Panel</div>
+                        <div class="feature-description">
+                            Create, edit, and manage AEP configurations with connection testing and dynamic API example generation.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Event Dashboard</div>
+                        <div class="feature-description">
+                            Real-time event monitoring with filtering, search, and detailed event views including enrichment and lineage.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <div class="feature-title">Lineage Visualization</div>
+                        <div class="feature-description">
+                            Visualize and manage data flow relationships between upstream and downstream systems for events.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">Stats Cards</div>
+                        <div class="feature-description">
+                            Display aggregated metrics: event count, high significance events, lineage assignments, recent activity.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-title">Event Filters</div>
+                        <div class="feature-description">
+                            Advanced filtering by event type, source system, significance level, and lineage assignment status.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">UI Component Library</div>
+                        <div class="feature-description">
+                            Radix UI primitives with Tailwind CSS styling: alerts, badges, buttons, cards, dialogs, tables, tabs, and more.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-label">Component Structure Example</span>
+                    <code>components/
+├── configuration-list.tsx
+├── configuration-panel.tsx
+├── event-dashboard.tsx
+├── event-filters.tsx
+├── event-list.tsx
+├── event-details.tsx
+├── event-enrichment.tsx
+├── lineage-management.tsx
+├── lineage-assignment-form.tsx
+├── lineage-visualization.tsx
+├── lineage-overview.tsx
+├── stats-cards.tsx
+├── header.tsx
+├── oauth-token-input.tsx
+└── ui/
+    ├── alert.tsx
+    ├── badge.tsx
+    ├── button.tsx
+    ├── card.tsx
+    ├── dialog.tsx
+    ├── table.tsx
+    └── ... (more components)</code>
+                </div>
+            </section>
+
+            <!-- ===== THEMING ===== -->
+            <section id="theming" class="section">
+                <h2 class="section-title">🎨 Theming System</h2>
+                <p class="section-subtitle">CSS variables, Tailwind integration, and animation library.</p>
+
+                <div class="code-block">
+                    <span class="code-label">CSS Color Variables</span>
+                    <code>:root {
+  --background: oklch(1 0 0);          /* Light mode */
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);      /* Dark mode */
+  --foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+}</code>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌓</div>
+                        <div class="feature-title">Light/Dark Modes</div>
+                        <div class="feature-description">
+                            Automatic theme switching with CSS variables override system. oklch color space ensures perceptual uniformity.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">Utility-First CSS</div>
+                        <div class="feature-description">
+                            Tailwind CSS integration enables rapid UI development with pre-defined utility classes and theme values.
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-title">Animation Library</div>
+                        <div class="feature-description">
+                            tw-animate-css provides responsive animation utilities for transitions, fade effects, and interactive feedback.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== EXAMPLES ===== -->
+            <section id="examples" class="section">
+                <h2 class="section-title">💡 Usage Examples</h2>
+                <p class="section-subtitle">Common patterns and request examples.</p>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem; font-size: 18px;">Fetching Batches with Configuration</h3>
+                <div class="code-block">
+                    <span class="code-label">JavaScript/TypeScript</span>
+                    <code>import { fetchWithConfig } from '@/lib/fetch-with-config';
+
+// Automatic configuration injection
+const batches = await fetchWithConfig(
+  '/api/batches?datasetId=MY_DATASET&limit=25'
+);
+
+const data = await batches.json();
+console.log(`Retrieved ${data.length} batches`);</code>
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem; font-size: 18px;">Creating AEP Configuration</h3>
+                <div class="code-block">
+                    <span class="code-label">Configuration Creation</span>
+                    <code>const config = {
+  clientId: 'YOUR_CLIENT_ID',
+  clientSecret: 'YOUR_CLIENT_SECRET',
+  orgId: 'YOUR_ORG_ID',
+  sandbox: 'prod',
+  sandboxId: 'YOUR_SANDBOX_ID',
+  isActive: true
+};
+
+// Save to IndexedDB
+await saveConfig(config);</code>
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem; font-size: 18px;">Token Validation</h3>
+                <div class="code-block">
+                    <span class="code-label">Validate OAuth Token</span>
+                    <code>const response = await fetch('/api/oauth/aep-token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ token: ACCESS_TOKEN })
+});
+
+const { valid, expiration } = await response.json();
+console.log(`Token valid: ${valid}, Expires: ${expiration}`);</code>
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem; font-size: 18px;">Segment Monitoring</h3>
+                <div class="code-block">
+                    <span class="code-label">Fetch Segment Jobs</span>
+                    <code>// Get recent segment jobs
+const jobsResponse = await fetchWithConfig('/api/segmentation/segment-jobs?limit=50');
+const jobs = await jobsResponse.json();
+
+// Filter by status
+const activeJobs = jobs.filter(job => job.status === 'RUNNING');
+console.log(`Active jobs: ${activeJobs.length}`);</code>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER SECTION ===== -->
+            <section class="section" style="margin-bottom: 0;">
+                <h2 class="section-title">📚 Additional Resources</h2>
+                <p class="section-subtitle">
+                    This API documentation is automatically generated and subject to updates. For the latest information, refer to the GitHub repository and official Adobe Experience Platform documentation.
+                </p>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">🚀 Getting Started</div>
+                    <div class="highlight-box-content">
+                        1. Set up environment variables with your AEP credentials<br>
+                        2. Deploy the application locally or to your infrastructure<br>
+                        3. Configure your AEP organization and sandbox in the UI<br>
+                        4. Test connectivity with the health-check endpoint<br>
+                        5. Start monitoring your AEP environment in real-time
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>AEP Health Viewer API Documentation | Generated January 22, 2026 | Palantir Aesthetic Design</p>
+        <p style="margin-top: 0.5rem; font-size: 12px;">All API endpoints require proper OAuth 2.0 authentication and valid AEP configuration.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active sidebar link
+                    document.querySelectorAll('.sidebar-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Update active sidebar link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const scrollPos = window.scrollY + 150;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                    const id = section.getAttribute('id');
+                    document.querySelectorAll('.sidebar-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    const activeLink = document.querySelector(`a[href="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
